@@ -1,0 +1,15 @@
+__pycache__/
+.pytest_cache/
+.venv/
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+paper/main.pdf
+results/raw/
+results/checkpoints/
+
