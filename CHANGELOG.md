@@ -4,9 +4,9 @@
 
 ### Code Agent Summary
 
-Created the structural entropy survey repository scaffold and vendored a local
-snapshot of `/workspace/glass-jax` into `code/glass-jax/` so the survey can ship
-with reproducibility and benchmark support.
+Created the structural entropy survey repository scaffold. Initially a full
+`glass-jax` copy was vendored, then it was replaced with a clean curated subset
+for survey reproducibility and benchmark support.
 
 The snapshot source commit is:
 
@@ -14,8 +14,16 @@ The snapshot source commit is:
 ab7d49d refactor the doc/, add doc for  integrating with tdmpc
 ```
 
+The current subset is:
+
+- objective implementations,
+- SEClust utilities needed by representative benchmarks,
+- spectral solver support,
+- same-protocol and differentiable benchmark scripts,
+- selected design/math/LSEnet/result-summary docs.
+
 The original active implementation remains `/workspace/glass-jax`. This project
-copy is a survey companion snapshot, not the canonical development location.
+copy is a survey companion subset, not the canonical development location.
 
 ### Current Scope
 
@@ -35,8 +43,7 @@ extension should live under `docs/journal_extension/`.
 - Write `docs/journal_extension/delta_from_ijcai.md`.
 - Build a taxonomy table covering objective type, data type, optimizer,
   supervision setting, and evaluation protocol.
-- Use `code/glass-jax/` to support a representative reproducibility benchmark,
-  not a full leaderboard claim.
+- Use `code/survey_support/` to support a representative reproducibility
+  benchmark, not a full leaderboard claim.
 - Decide whether the released library is described as a companion artifact,
   benchmark infrastructure, or independent software contribution.
-
