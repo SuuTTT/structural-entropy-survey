@@ -1,4 +1,37 @@
 \begin{abstract}
-TODO.
+Classical information theory is fundamentally limited by its local perspective,
+analyzing pairwise interactions while ignoring the larger hierarchical
+architecture of complex systems.
+\emph{Structural Entropy} (SE) presents a paradigm shift: it extends Shannon
+entropy to quantify information on a global scale and measures the uncertainty
+embedded in a system's organizational hierarchy.
+Since its introduction in 2016, SE has evolved from a principled measure for
+community detection into a broadly applicable framework spanning graph learning,
+reinforcement learning, bioinformatics, social-network forensics, and pattern
+recognition---yet a systematic, unified synthesis of its theory, algorithms,
+and applications has been lacking.
+
+This survey provides a comprehensive decade-long overview of SE research.
+We (i)~formalize its theoretical foundations, covering the seminal framework,
+key extensions to directed, dynamic, and multi-relational graphs, and formal
+connections to spectral entropy;
+(ii)~survey the computational landscape, cataloguing heuristic, constrained,
+and differentiable SE minimization algorithms together with their complexity
+profiles;
+(iii)~analyze SE-driven learning paradigms in graph pooling, structure
+augmentation, and reinforcement learning;
+(iv)~review cross-domain applications in bioinformatics, transportation,
+geoscience, social networks, and pattern recognition;
+and (v)~present a reproducibility benchmark comparing SE-based objectives
+against competing graph-clustering methods.
+We further discuss open research challenges and future directions, including
+unified frameworks for heterogeneous and hypergraph structures, scalable
+optimization, and the integration of SE into large language model pipelines.
+A companion open-source library, \texttt{glass-jax}, accompanies this survey
+as a reproducibility artifact.
+
+\medskip\noindent\textbf{Keywords:} structural entropy, graph clustering,
+hierarchical community detection, graph neural networks, reinforcement learning,
+information theory.
 \end{abstract}
 

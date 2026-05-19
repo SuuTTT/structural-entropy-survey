@@ -1,3 +1,55 @@
 \section{Conclusion}
-TODO.
+\label{sec:conclusion}
+
+This survey has systematically charted the landscape of Structural Entropy
+research over the decade since its introduction in 2016.
+We have consolidated its theoretical underpinnings, computational
+methodologies, and burgeoning applications across AI, presenting the field's
+first comprehensive synthesis.
+
+Our review reveals that SE offers a distinct and powerful lens for artificial
+intelligence: it shifts the focus from local, pairwise interactions to the
+global, hierarchical organization of complex systems.
+We have detailed how minimizing SE serves as a constructive principle to
+uncover a system's most efficient information-theoretic abstraction---a
+capability that has been effectively harnessed in graph learning for pooling
+and structure augmentation, in reinforcement learning for hierarchical
+state--action abstraction and exploration, and in diverse application domains
+from genomics to speech processing.
+
+The reproducibility benchmark in Section~\ref{sec:benchmark} demonstrates
+that differentiable SE objectives, as implemented in the \texttt{glass-jax}
+library, match or exceed state-of-the-art methods on realistic, noisy graph
+topologies while offering the key advantage of end-to-end gradient-based
+optimization.
+
+In conclusion, Structural Entropy provides more than a new set of tools: it
+offers a principled way of thinking about information and structure in a
+hierarchical world.
+By providing a rigorous method to quantify and optimize organizational
+uncertainty within data, SE holds the potential to guide the development of AI
+systems that are not only more powerful but also more interpretable, robust,
+and theoretically grounded.
+The eight open problems identified in Section~\ref{sec:open} chart a research
+agenda for the next decade.
+
+\paragraph{Differences from the IJCAI-2025 Conference Version.}
+This journal article substantially extends~\cite{su2025ijcai} in the following
+ways:
+\begin{enumerate}
+  \item A new, self-contained \emph{formal foundations} section with precise
+        definitions and comparative analysis against modularity, map equation,
+        and von Neumann entropy.
+  \item An extended \emph{algorithm catalogue} (Table~\ref{tab:algorithms})
+        covering all known SE minimization methods with unified complexity
+        notation.
+  \item A new \emph{reproducibility benchmark} (Section~\ref{sec:benchmark})
+        with empirical comparisons over multiple datasets and random seeds.
+  \item Expanded \emph{application coverage}: speech processing (SECodec,
+        SEVC), geoscience knowledge quantification (KQI), and updated
+        2025--2026 literature.
+  \item A structured \emph{open problems} section
+        (Section~\ref{sec:open}) absent from the conference version.
+  \item Release of \texttt{glass-jax} as a companion reproducibility library.
+\end{enumerate}
 

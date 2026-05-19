@@ -1,3 +1,172 @@
-\section{A Taxonomy of Structural Entropy Research}
-TODO.
+\section{Formal Foundations and Taxonomy}
+\label{sec:taxonomy}
+
+\subsection{Basic Mathematical Constructs}
+\label{subsec:basics}
+
+\subsubsection{Encoding Tree of a Finite Set}
+
+Let $A$ be a finite set representing the entities in a complex system (e.g.,
+nodes in a network or data points in a dataset).
+A natural model for the structure of such a system is a \emph{hierarchical
+abstraction} in which elements are recursively grouped into nested subsets.
+
+\begin{definition}[Encoding Tree]
+\label{def:encoding-tree}
+Given a finite set $A$, an \emph{encoding tree} of $A$ is a rooted tree $T$
+such that:
+(1) the root $\lambda$ corresponds to the entire set $T_\lambda = A$;
+(2) for every non-leaf node $\alpha\in T$ with children
+    $\beta_0,\ldots,\beta_l$ the corresponding subsets form a partition
+    $T_\alpha = \bigsqcup_{j=0}^l T_{\beta_j}$;
+(3) each leaf $\gamma\in T$ corresponds to a singleton $T_\gamma = \{a\}$.
+\end{definition}
+
+The \emph{dimension} of an encoding tree is its depth.
+The extreme case---an encoding tree of depth~1 where the root is directly
+partitioned into singleton leaves---yields the \textbf{1-dimensional SE},
+which reduces to Shannon entropy.
+
+\subsubsection{Structural Entropy}
+
+Consider a non-negative, irreducible matrix
+$A\in\mathbb{R}_{\ge 0}^{n\times n}$ representing an information system over
+$n$ elements indexed by $V=\{1,\ldots,n\}$.
+Let $\boldsymbol\pi=(\pi_1,\ldots,\pi_n)$ be the stationary distribution of
+the Markov chain derived from $A$ by row normalization, with transition
+probability $p_{xy}=\pi_x\,b_{xy}$ where $b_{xy}=a_{xy}/\sum_j a_{xj}$.
+
+For a subset $X\subseteq V$ define:
+\[
+  V_X = \sum_{x\in X}\pi_x, \qquad
+  p_X = \sum_{y\notin X}\sum_{x\in X}p_{yx}, \qquad
+  q_X = \sum_{x\in X}\sum_{y\notin X}p_{xy}.
+\]
+
+\begin{definition}[Structural Entropy under a Tree]
+\label{def:se-tree}
+The \emph{structural entropy} of $A$ under encoding tree $T$ is
+\[
+  \mathcal{H}^T(A)
+  = -\sum_{\substack{\alpha\in T\\\alpha^-\neq\lambda}}
+    p_\alpha\log_2\frac{V_\alpha}{V_{\alpha^-}},
+\]
+where $\alpha^-$ denotes the parent of $\alpha$ in $T$.
+\end{definition}
+
+\begin{definition}[Structural Entropy of a System]
+\label{def:se-system}
+The \emph{structural entropy} of an information system is
+\[
+  \mathcal{H}(A) = \min_T \mathcal{H}^T(A).
+\]
+\end{definition}
+
+The minimizing tree $T^*$ encodes the system's most efficient
+information-theoretic abstraction---its natural hierarchical community
+structure~\cite{Li2016}.
+
+\subsection{Relationship to Other Graph-Complexity Measures}
+\label{subsec:relations}
+
+Three major graph-complexity measures are related to SE:
+
+\paragraph{Modularity~\cite{newman2004findingmodularity}.}
+Modularity $Q$ measures the fraction of edges within communities minus the
+expected fraction under a null model.
+While modularity seeks to maximize within-community density relative to a
+random graph, SE minimization seeks to \emph{minimize informational
+uncertainty} within a hierarchical partition.
+Modularity is resolution-limited (it cannot detect communities smaller than a
+scale-dependent threshold); SE is not subject to the same limitation.
+
+\paragraph{Map Equation~\cite{rosvall2008maps}.}
+Infomap minimizes the expected description length of a random walk under a
+two-level codebook.
+SE generalization replaces the two-level restriction with an arbitrary tree,
+and replaces flow coding with a volume-and-cut measure.
+Formally, \cite{liu2022similaritygap} proved that for any undirected graph
+$\mathcal{H}(A) \le L^*(A) \le \mathcal{H}(A) + \gamma$, where $L^*$ is the
+optimal map-equation description length and $\gamma$ depends only on the
+graph's degree sequence.
+
+\paragraph{Von Neumann Entropy (VNE).}
+VNE is the entropy of the normalized graph Laplacian's eigenvalue
+distribution.
+\cite{liu2022similaritygap} established that
+$\mathcal{H}(A) - \mathrm{VNE}(A) \in [0,\gamma]$, providing the first
+formal spectral interpretation of SE.
+
+\subsection{Taxonomy of SE Research}
+\label{subsec:taxonomy}
+
+Figure~\ref{fig:taxonomy} provides a high-level taxonomy organizing SE
+research into three pillars---\emph{Theory}, \emph{Learning Methods}, and
+\emph{Cross-Domain Applications}---each containing major sub-themes.
+We follow this taxonomy throughout the survey.
+
+\begin{figure}[ht]
+\centering
+\fbox{\parbox{0.9\textwidth}{%
+\textbf{Structural Entropy Research}
+\begin{itemize}
+  \item \textbf{Theory}
+    \begin{itemize}
+      \item Foundational works: SE~\cite{Li2016}, ISPAI~\cite{li2024book}
+      \item Theoretical analysis: spectral gap~\cite{liu2022similaritygap},
+            incremental~\cite{yang2024incremental},
+            togetherness~\cite{ljm2021improvingTogetherness}
+      \item Extensions: directed~\cite{wxb2024rwedirected,yaopan2019flowDirected},
+            multi-relational~\cite{cao2024multi},
+            source localization~\cite{wxb2023findingThesource},
+            probabilistic coding~\cite{huang2024structuralProbCoding}
+    \end{itemize}
+  \item \textbf{Computational Algorithms}
+    \begin{itemize}
+      \item Heuristic: deDoc~\cite{li2018dedoc}, SEAT~\cite{chen2022pyseat},
+            HCSE~\cite{pan2021information}
+      \item Constrained: SuperTAD~\cite{zhang2021supertad},
+            deDoc2~\cite{li2023dedoc2},
+            SuperTAD2~\cite{ling2024supertad2},
+            SSE~\cite{zeng2024semiSSE},
+            SSSE~\cite{zeng2024scalableSSSE},
+            CoDeSEG~\cite{xian2025communitySEGame}
+      \item Differentiable: LSENet~\cite{sun2024lsenet},
+            DeSE~\cite{zhang2025dese}
+    \end{itemize}
+  \item \textbf{Learning Methods}
+    \begin{itemize}
+      \item Graph pooling: SEP~\cite{wu2022pooling},
+            Hi-PART~\cite{wxb2024hi-part}, EDEN~\cite{li2025eden}
+      \item Structure augmentation: SE-GSL~\cite{zou2023segsl},
+            SEGA~\cite{wu2023sega},
+            USER~\cite{wang2023user},
+            SeGSL~\cite{duan2024structuralGSL}
+      \item Kernels \& dimensions: HAGK~\cite{yang2024graphkernal},
+            MGEDE~\cite{yang2023MGEDE}
+      \item Reinforcement learning: SIRD~\cite{zeng2023effective},
+            SISA~\cite{zeng2023hierarchicalSISA},
+            SI2E~\cite{zeng2024effectiveSI2E},
+            COLLAB~\cite{su2025emergencecollab}
+    \end{itemize}
+  \item \textbf{Applications}
+    \begin{itemize}
+      \item Bioinformatics: cancer~\cite{li2016cancer},
+            TAD detection~\cite{zhang2021supertad,li2023dedoc2},
+            single-cell~\cite{chen2022pyseat,li2021detoki}
+      \item Transport \& geoscience:
+            traffic~\cite{zou2024multispans},
+            scientific knowledge~\cite{wxb2022scientificxray,wang2023quantifyingKnowledge}
+      \item Social networks: bot detection~\cite{peng2024zjyun,yang2024sebot},
+            event detection~\cite{cao2024socialevent,yang2024eventdetect,yu2024hyperSED},
+            safety~\cite{zeng2025si2af}
+      \item Pattern recognition: image~\cite{zeng2023lesion,xie2025superpixel},
+            text~\cite{zhu2023HiTIN,huang2025MASGCN},
+            speech~\cite{wang2024secodecSpeech,wang2025voice}
+    \end{itemize}
+\end{itemize}
+}}
+\caption{Taxonomy of Structural Entropy research (2016--2026).}
+\label{fig:taxonomy}
+\end{figure}
 

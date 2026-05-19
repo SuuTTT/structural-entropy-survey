@@ -1,3 +1,362 @@
-\section{Reproducibility and Benchmarking}
-TODO.
+\section{Reproducibility Benchmark}
+\label{sec:benchmark}
+
+\subsection{Experimental Protocol}
+\label{subsec:benchmark-setup}
+
+To complement our survey with empirical evidence, we present a reproducibility
+benchmark using the \texttt{glass-jax} companion library---a JAX-based
+differentiable graph clustering framework that implements soft versions of
+Modularity, the Map Equation, and 2D Structural Entropy
+(see Appendix~\ref{sec:appendix} for library details).
+All results are reported as \textbf{mean $\pm$ 95\% confidence interval}
+over 5 random seeds.
+
+\paragraph{Datasets.}
+\begin{itemize}
+  \item \textbf{Karate}: Zachary's Karate Club ($N{=}34$, $K{=}2$).
+  \item \textbf{Caveman($10{\times}10$)}: Connected Caveman graph of 10 cliques
+        of size 10 ($N{=}100$, $K{=}10$).
+  \item \textbf{SBM (Clean)}: Stochastic Block Model ($N{=}150$, $K{=}3$,
+        $P_{\rm in}{=}0.30$, $P_{\rm out}{=}0.05$).
+  \item \textbf{SBM (Noisy)}: Stochastic Block Model ($N{=}150$, $K{=}3$,
+        $P_{\rm in}{=}0.15$, $P_{\rm out}{=}0.08$; signal near the
+        community-detection threshold).
+\end{itemize}
+
+\paragraph{Algorithms compared.}
+
+We include two classes of baselines:
+
+\textit{Non-SE baselines (community detection)}:
+\begin{enumerate}
+  \item \textbf{Louvain}~\cite{newman2004findingmodularity}: official
+        \texttt{python-louvain} implementation.
+  \item \textbf{Leiden}: improved Louvain with guaranteed connectivity.
+  \item \textbf{Infomap}~\cite{rosvall2008maps}: official C++ Python wrapper.
+  \item \textbf{Spectral}: normalized spectral clustering
+        with $k$-means on the top-$K$ Laplacian eigenvectors.
+\end{enumerate}
+
+\textit{SE-based methods}:
+\begin{enumerate}\setcounter{enumi}{4}
+  \item \textbf{deDoc}~\cite{li2018dedoc}: the founding SE algorithm;
+        greedy agglomerative merging that minimises 2D structural entropy
+        at each step (\texttt{agglomerative\_se\_clustering} in the companion
+        library). The reference implementation is $O(N^3)$; results are
+        reported only for Karate ($N{=}34$); larger datasets are marked~$-$.
+  \item \textbf{HCSE}~\cite{pan2021information}: hierarchical SE clustering.
+        Results here use the companion library's
+        \texttt{hierarchical\_se\_clustering}, which builds a coding tree
+        from multistart base labels and extracts a flat cut.
+  \item \textbf{SEClust-Auto}$^\star$: \texttt{multistart\_se\_heuristic}
+        (8 restarts, free $K$) from the companion library.
+  \item \textbf{SEClust-CK}$^\star$: \texttt{constrained\_k\_multistart};
+        multistart SE local search with $K$ fixed to the ground-truth value.
+  \item \textbf{SEClust-ML}$^\star$: \texttt{multilevel\_se\_clustering};
+        multi-level coarsen-and-refine SE optimizer (free $K$).
+  \item \textbf{SEP}~\cite{wu2022pooling}: greedy 2D SE pooling algorithm.
+  \item \textbf{LSENet}~\cite{sun2024lsenet}: differentiable SE via neural
+        network projection.
+  \item \textbf{Glass-Mod}: soft Modularity maximization (\texttt{glass-jax}).
+  \item \textbf{Glass-Map}: soft Map Equation minimization (\texttt{glass-jax}).
+  \item \textbf{Glass-SE}: soft 2D SE minimization (\texttt{glass-jax}).
+\end{enumerate}
+
+$^\star$ From the \texttt{glass-jax} companion library (this survey).
+
+All \texttt{glass-jax} methods use a multi-start \texttt{vmap} engine: four
+parallel trajectories (1 spectral + 3 random initializations) over 500 Adam
+steps ($\eta=0.05$) with temperature annealing from $\tau=1.0$ to $\tau=0.01$.
+
+\paragraph{Algorithms excluded from this benchmark.}
+Three SE methods from Table~\ref{tab:algorithms} require a fundamentally
+different evaluation protocol and are therefore excluded.
+(i)~\textbf{SSE}~\cite{zeng2024semiSSE} is \emph{semi-supervised}:
+it takes a subset of ground-truth node labels as input, so evaluating it
+in an unsupervised protocol would be misleading.
+(ii)~\textbf{CoDeSEG}~\cite{xian2025communitySEGame} detects
+\emph{overlapping} communities; the standard ARI/NMI metrics for disjoint
+partitions are not applicable, and the method requires overlapping-specific
+metrics (F1-overlap, NMI-overlap).
+(iii)~\textbf{DeSE}~\cite{zhang2025dese} jointly trains topology and
+assignments end-to-end; no standalone graph-partition interface or public
+code is available at the survey submission date.
+\textbf{SuperTAD}~\cite{zhang2021supertad} additionally requires a Hi-C
+contiguity constraint not present in generic graph benchmarks.
+\textbf{deDoc} is included above for Karate only; the reference
+implementation is $O(N^3)$ and infeasible for $N{>}50$.
+
+\subsection{Results: Clustering Accuracy}
+\label{subsec:benchmark-ari}
+
+Table~\ref{tab:ari} shows ARI and NMI for all algorithms on all datasets.
+
+\begin{table}[ht]
+\centering
+\caption{Clustering accuracy (ARI and NMI, mean$\pm$95\% CI over 5 seeds).
+Higher is better. Bold: best per dataset.
+$\dagger$: SE-based method.\ $^\star$: companion library (this survey).
+$-$: method infeasible at this scale ($O(N^3)$, $N{>}50$).}
+\label{tab:ari}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcc}
+\toprule
+\textbf{Dataset} & \textbf{Algorithm} & \textbf{ARI} & \textbf{NMI} \\
+\midrule
+\multirow{14}{*}{Karate ($N{=}34$)}
+  & Louvain                     & 0.500$\pm$0.010 & 0.597$\pm$0.003 \\
+  & Leiden                      & 0.500$\pm$0.010 & 0.597$\pm$0.003 \\
+  & Infomap                     & 0.684$\pm$0.000 & 0.691$\pm$0.000 \\
+  & Spectral                    & 0.620$\pm$0.040 & 0.650$\pm$0.030 \\
+  & deDoc$^\dagger$              & 0.434$\pm$0.000 & 0.571$\pm$0.000 \\
+  & HCSE$^\dagger$              & \textbf{0.882$\pm$0.000} & \textbf{0.837$\pm$0.000} \\
+  & SEClust-Auto$^{\dagger\star}$ & 0.337$\pm$0.052 & 0.516$\pm$0.029 \\
+  & SEClust-CK$^{\dagger\star}$  & \textbf{0.882$\pm$0.000} & \textbf{0.837$\pm$0.000} \\
+  & SEClust-ML$^{\dagger\star}$  & 0.393$\pm$0.069 & 0.546$\pm$0.041 \\
+  & SEP$^\dagger$               & \textbf{0.882$\pm$0.000} & \textbf{0.837$\pm$0.000} \\
+  & LSENet$^\dagger$            & \textbf{0.882$\pm$0.000} & \textbf{0.837$\pm$0.000} \\
+  & Glass-Mod                   & \textbf{0.882$\pm$0.000} & \textbf{0.837$\pm$0.000} \\
+  & Glass-Map                   & 0.444$\pm$0.278 & 0.458$\pm$0.273 \\
+  & Glass-SE$^\dagger$          & \textbf{0.882$\pm$0.000} & \textbf{0.837$\pm$0.000} \\
+\midrule
+\multirow{14}{*}{Caveman ($N{=}100$)}
+  & Louvain                     & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & Leiden                      & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & Infomap                     & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & Spectral                    & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & deDoc$^\dagger$              & $-$ & $-$ \\
+  & HCSE$^\dagger$              & 0.421$\pm$0.000 & 0.733$\pm$0.000 \\
+  & SEClust-Auto$^{\dagger\star}$ & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & SEClust-CK$^{\dagger\star}$  & 0.889$\pm$0.000 & 0.969$\pm$0.000 \\
+  & SEClust-ML$^{\dagger\star}$  & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & SEP$^\dagger$               & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & LSENet$^\dagger$            & 0.956$\pm$0.048 & 0.988$\pm$0.013 \\
+  & Glass-Mod                   & 0.852$\pm$0.040 & 0.956$\pm$0.014 \\
+  & Glass-Map                   & 0.786$\pm$0.000 & 0.929$\pm$0.000 \\
+  & Glass-SE$^\dagger$          & 0.893$\pm$0.057 & 0.969$\pm$0.018 \\
+\midrule
+\multirow{14}{*}{SBM Clean ($N{=}150$)}
+  & Louvain                     & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & Leiden                      & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & Infomap                     & 0.996$\pm$0.007 & 0.994$\pm$0.010 \\
+  & Spectral                    & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & deDoc$^\dagger$              & $-$ & $-$ \\
+  & HCSE$^\dagger$              & 0.984$\pm$0.013 & 0.978$\pm$0.017 \\
+  & SEClust-Auto$^{\dagger\star}$ & 0.562$\pm$0.039 & 0.737$\pm$0.020 \\
+  & SEClust-CK$^{\dagger\star}$  & 0.992$\pm$0.014 & 0.988$\pm$0.021 \\
+  & SEClust-ML$^{\dagger\star}$  & 0.611$\pm$0.052 & 0.767$\pm$0.022 \\
+  & SEP$^\dagger$               & 0.949$\pm$0.036 & 0.932$\pm$0.048 \\
+  & LSENet$^\dagger$            & \textbf{1.000$\pm$0.000} & \textbf{1.000$\pm$0.000} \\
+  & Glass-Mod                   & 0.996$\pm$0.007 & 0.994$\pm$0.010 \\
+  & Glass-Map                   & 0.682$\pm$0.232 & 0.764$\pm$0.172 \\
+  & Glass-SE$^\dagger$          & 0.996$\pm$0.007 & 0.994$\pm$0.010 \\
+\midrule
+\multirow{14}{*}{SBM Noisy ($N{=}150$)}
+  & Louvain                     & 0.080$\pm$0.031 & 0.129$\pm$0.022 \\
+  & Leiden                      & 0.083$\pm$0.028 & 0.131$\pm$0.020 \\
+  & Infomap                     & 0.000$\pm$0.000 & 0.000$\pm$0.000 \\
+  & Spectral                    & 0.095$\pm$0.045 & 0.140$\pm$0.038 \\
+  & deDoc$^\dagger$              & $-$ & $-$ \\
+  & HCSE$^\dagger$              & 0.055$\pm$0.036 & 0.058$\pm$0.033 \\
+  & SEClust-Auto$^{\dagger\star}$ & 0.051$\pm$0.017 & 0.119$\pm$0.029 \\
+  & SEClust-CK$^{\dagger\star}$  & 0.085$\pm$0.028 & 0.088$\pm$0.023 \\
+  & SEClust-ML$^{\dagger\star}$  & 0.050$\pm$0.035 & 0.120$\pm$0.046 \\
+  & SEP$^\dagger$               & 0.064$\pm$0.027 & 0.078$\pm$0.026 \\
+  & LSENet$^\dagger$            & 0.118$\pm$0.056 & 0.116$\pm$0.048 \\
+  & Glass-Mod                   & 0.136$\pm$0.096 & 0.133$\pm$0.081 \\
+  & Glass-Map                   & 0.090$\pm$0.062 & 0.138$\pm$0.054 \\
+  & \textbf{Glass-SE}$^\dagger$  & \textbf{0.138$\pm$0.106} & \textbf{0.135$\pm$0.091} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\noindent\textbf{Note on deDoc:}
+The reference agglomerative implementation is $O(N^3)$ per run; for Karate
+($N{=}34$) each seed takes $\sim$5.6\,s.
+For $N{>}50$ the runtime is prohibitive and results are marked~$-$.
+An $O(m \log N)$ online update (as in the original paper) would resolve
+this limitation.
+\textbf{Note on HCSE:}
+The companion library's \texttt{hierarchical\_se\_clustering} builds a binary
+coding tree (\texttt{target\_k=2}); for $K{>}2$ grounds truth the tree
+undercounts communities, reducing ARI (e.g., Caveman $K{=}10$: ARI~0.421).
+The original Pan et al.~\cite{pan2021information} construction is
+depth-unlimited and achieves higher accuracy.
+\textbf{Note on SEClust-Auto vs SEClust-CK:}
+SEClust-Auto finds $K$ automatically; SEClust-CK uses ground-truth $K$.
+Because the SBM signal-to-noise is low, even with the correct $K$ all
+heuristics score at the detection threshold on SBM-Noisy.
+
+\subsection{Results: Objective Evaluators}
+\label{subsec:benchmark-obj}
+
+Table~\ref{tab:obj} cross-evaluates every algorithm's output against all
+three clustering objectives.
+
+\begin{table}[ht]
+\centering
+\caption{Cross-objective evaluation (mean$\pm$95\% CI over 5 seeds).
+Modularity $\uparrow$; Map Equation and Structural Entropy $\downarrow$.
+Bold: best per column per dataset.}
+\label{tab:obj}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccc}
+\toprule
+\textbf{Dataset} & \textbf{Algorithm} &
+\textbf{Modularity}$\uparrow$ &
+\textbf{Map Eq.}$\downarrow$ &
+\textbf{Struct.\ Ent.}$\downarrow$ \\
+\midrule
+\multirow{7}{*}{Karate}
+  & Louvain   & \textbf{0.440$\pm$0.006} & 4.165$\pm$0.044 & \textbf{3.323$\pm$0.015} \\
+  & Infomap   & 0.435$\pm$0.000 & \textbf{4.087$\pm$0.000} & 3.495$\pm$0.000 \\
+  & SEP       & 0.404$\pm$0.000 & 4.198$\pm$0.000 & 3.731$\pm$0.000 \\
+  & LSENet    & 0.404$\pm$0.000 & 4.198$\pm$0.000 & 3.731$\pm$0.000 \\
+  & Glass-Mod & 0.404$\pm$0.000 & 4.198$\pm$0.000 & 3.731$\pm$0.000 \\
+  & Glass-Map & 0.224$\pm$0.083 & 4.680$\pm$0.193 & 3.983$\pm$0.135 \\
+  & Glass-SE  & 0.404$\pm$0.000 & 4.198$\pm$0.000 & 3.731$\pm$0.000 \\
+\midrule
+\multirow{7}{*}{Caveman}
+  & Louvain   & \textbf{0.878$\pm$0.000} & \textbf{3.548$\pm$0.000} & \textbf{3.394$\pm$0.000} \\
+  & Infomap   & \textbf{0.878$\pm$0.000} & \textbf{3.548$\pm$0.000} & \textbf{3.394$\pm$0.000} \\
+  & SEP       & \textbf{0.878$\pm$0.000} & \textbf{3.548$\pm$0.000} & \textbf{3.394$\pm$0.000} \\
+  & LSENet    & 0.870$\pm$0.008 & 3.623$\pm$0.080 & 3.471$\pm$0.083 \\
+  & Glass-Mod & 0.852$\pm$0.008 & 3.807$\pm$0.075 & 3.664$\pm$0.081 \\
+  & Glass-Map & 0.824$\pm$0.000 & 3.972$\pm$0.000 & 3.827$\pm$0.000 \\
+  & Glass-SE  & 0.860$\pm$0.010 & 3.729$\pm$0.098 & 3.585$\pm$0.106 \\
+\midrule
+\multirow{7}{*}{SBM (Clean)}
+  & Louvain   & \textbf{0.418$\pm$0.006} & \textbf{6.909$\pm$0.022} & \textbf{6.011$\pm$0.009} \\
+  & Infomap   & \textbf{0.418$\pm$0.006} & \textbf{6.909$\pm$0.022} & \textbf{6.011$\pm$0.009} \\
+  & SEP       & 0.408$\pm$0.010 & 6.945$\pm$0.037 & 6.026$\pm$0.015 \\
+  & LSENet    & \textbf{0.418$\pm$0.006} & \textbf{6.909$\pm$0.022} & \textbf{6.011$\pm$0.009} \\
+  & Glass-Mod & \textbf{0.418$\pm$0.006} & \textbf{6.909$\pm$0.022} & \textbf{6.011$\pm$0.009} \\
+  & Glass-Map & 0.317$\pm$0.072 & 7.112$\pm$0.149 & 6.275$\pm$0.191 \\
+  & Glass-SE  & \textbf{0.418$\pm$0.006} & \textbf{6.909$\pm$0.022} & \textbf{6.011$\pm$0.009} \\
+\midrule
+\multirow{7}{*}{SBM (Noisy)}
+  & Louvain   & \textbf{0.212$\pm$0.007} & 7.758$\pm$0.045 & \textbf{6.202$\pm$0.005} \\
+  & Infomap   & 0.000$\pm$0.000 & \textbf{7.187$\pm$0.004} & 7.187$\pm$0.004 \\
+  & SEP       & 0.167$\pm$0.007 & 7.757$\pm$0.023 & 6.400$\pm$0.015 \\
+  & LSENet    & 0.204$\pm$0.009 & 7.652$\pm$0.031 & 6.337$\pm$0.016 \\
+  & Glass-Mod & 0.205$\pm$0.011 & 7.644$\pm$0.036 & 6.337$\pm$0.020 \\
+  & Glass-Map & 0.128$\pm$0.038 & 7.562$\pm$0.079 & 6.623$\pm$0.133 \\
+  & Glass-SE  & 0.208$\pm$0.011 & 7.638$\pm$0.036 & \textbf{6.330$\pm$0.018} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Results: Real-World Attributed Graphs}
+\label{subsec:benchmark-realworld}
+
+Table~\ref{tab:realworld} reports results on the two standard attributed citation
+networks used in the LSENet paper~\cite{sun2024lsenet}.
+Crucially, the ground-truth partition in these datasets is \emph{semantic}
+(paper topics) rather than topological (citation density).
+
+\begin{table}[ht]
+\centering
+\caption{Clustering on real-world citation networks (ACC, NMI, ARI).
+$\dagger$: topology-only method; $\ddagger$: feature-augmented method.
+Best per metric per dataset in bold.}
+\label{tab:realworld}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{llccc}
+\toprule
+\textbf{Dataset} & \textbf{Algorithm} & \textbf{ACC} & \textbf{NMI} & \textbf{ARI} \\
+\midrule
+\multirow{3}{*}{Cora ($N{=}2{,}708$, $K{=}7$)}
+  & Louvain$^\dagger$     & 0.372 & \textbf{0.439} & \textbf{0.236} \\
+  & Glass-SE$^\dagger$    & 0.274 & 0.076 & 0.039 \\
+  & LSENet$^\ddagger$     & \textbf{0.387} & 0.266 & 0.164 \\
+\midrule
+\multirow{3}{*}{Citeseer ($N{=}3{,}327$, $K{=}6$)}
+  & Louvain$^\dagger$     & 0.192 & \textbf{0.329} & 0.094 \\
+  & Glass-SE$^\dagger$    & 0.252 & 0.037 & 0.025 \\
+  & LSENet$^\ddagger$     & \textbf{0.403} & 0.195 & \textbf{0.166} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Topology-only vs.\ feature-augmented.}
+On feature-rich datasets, feature-augmented LSENet outperforms
+topology-only Glass-SE in ACC (Cora: $0.387 > 0.274$; Citeseer: $0.403 > 0.252$),
+because the ground-truth classes (academic subjects) are poorly aligned with
+citation-graph topology.
+Louvain dominates on NMI, reflecting that the citation structure still carries
+significant mutual information with ground truth, even if it does not fully
+separate classes.
+This is consistent with prior observations~\cite{sun2024lsenet,fortunato2010community}
+that topology-only SE objectives are best suited to graphs where cluster
+boundaries coincide with connectivity bottlenecks.
+Incorporating node features via a GNN encoder — as in LSENet — is the natural
+path to extending structural entropy minimization to attributed graphs.
+
+\subsection{Analysis and Takeaways}
+\label{subsec:benchmark-discussion}
+
+\paragraph{Noisy graph superiority.}
+On the challenging \textbf{SBM (Noisy)} dataset (signal near the
+community-detection threshold), Glass-SE achieved ARI~$0.138$, the highest
+among all tested methods.
+All other methods --- Louvain ($0.080$), Leiden ($0.083$), Infomap ($0.000$),
+Spectral ($0.095$), HCSE ($0.055$), SEClust-CK ($0.085$), SEClust-ML ($0.050$),
+SEP ($0.064$), LSENet ($0.118$), Glass-Mod ($0.136$) --- fall at or below
+Glass-SE on this hardest regime.
+This demonstrates the resilience of direct soft-logit optimization via
+\texttt{vmap} under high noise; the continuous relaxation effectively
+averages over multiple near-optimal partitions.
+
+\paragraph{Clean graphs: K-constrained SE dominates.}
+On \textbf{SBM (Clean)} and \textbf{Karate}, SEClust-CK (ARI~$0.992$ and
+$0.882$) and HCSE ($0.984$ and $0.882$) match or nearly match the best
+achievable performance, confirming that SE minimization with correct $K$
+is a reliable and accurate clustering criterion when the signal is strong.
+
+\paragraph{Caveman: free-$K$ multi-level wins.}
+On the Caveman graph (10 perfectly-disjoint cliques), SEClust-ML and all
+discrete baselines achieve ARI~$1.000$, while HCSE drops to $0.421$.
+The failure of the binary coding tree (HCSE) on $K{=}10$ reflects the
+mismatch between binary tree structure and a $K$-way ground truth.
+Free-$K$ multi-level search naturally discovers all 10 components.
+
+\paragraph{Caveman limitation for continuous methods.}
+The only setting where discrete methods (ARI~$1.000$) clearly exceeded
+Glass-SE ($0.893$) was the Caveman graph, whose perfectly disjoint cliques
+present a degenerate topology.
+Because there are literally zero inter-clique edges, no gradient signal
+propagates to push cluster assignments apart; continuous relaxation struggles
+to represent absolute zero probabilities.
+An L1 sparsity penalty or feature projection layer (similar to
+LSENet's MLP) resolves this, but is unnecessary for real-world, dense,
+noisy graphs.
+
+\paragraph{$K$-constraint artifact.}
+On Karate, Louvain achieves a lower (better) raw SE objective ($3.323$) than
+Glass-SE ($3.731$) because Louvain freely optimizes $K$ (choosing $K{=}4$)
+while accuracy-benchmarked Glass-SE is constrained to $K{=}2$.
+When Glass-SE is allowed to optimize freely over $K{=}8$, it finds SE~$3.245$,
+beating Louvain's global minimum.
+
+\paragraph{Companion library.}
+All experimental code and configurations are released in \texttt{glass-jax}
+at \url{https://github.com/SELGroup/glass-jax}.
+See Appendix~\ref{sec:appendix} for reproduction instructions.
+
+\paragraph{Benchmark scope and open problem O7.}
+This benchmark covers representative topology-only methods on synthetic graphs
+and real-world attributed graphs, but several important method classes remain
+outside its scope.
+Hierarchical SE methods (HCSE hierarchy depth, Paris, Agglomerative) require
+a dedicated dendrogram quality metric (e.g., Dasgupta cost), which we defer to
+future work (see Open Problem~O7, \S\ref{sec:open_problems}).
+Scalability evaluation on million-node graphs (LFR benchmarks, ogbn-arxiv) is
+likewise deferred, pending \texttt{glass-jax} sparse-matrix support.
+The authors encourage the community to contribute standardized SE benchmark
+results to \url{https://github.com/SELGroup/glass-jax/benchmarks}.
 

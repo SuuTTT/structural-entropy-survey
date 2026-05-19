@@ -1,3 +1,151 @@
-\section{Optimization and Algorithms}
-TODO.
+\section{Theoretical Foundations and Computational Algorithms}
+\label{sec:theory}
+\label{sec:algorithms}
+
+\subsection{Foundational Theoretical Works}
+\label{subsec:theory-foundation}
+
+\paragraph{Foundation Theory.}
+The concept of SE was introduced by~\cite{Li2016} as a principled,
+information-theoretic framework for quantifying the complexity of a graph's
+structure.
+The seminal work defined SE as the minimum code length required to describe a
+network's hierarchy under a random walk process, bridging graph theory with
+Shannon's information principles.
+It established that minimizing SE reveals a graph's intrinsic multi-scale
+organization.
+Building on this,~\cite{li2024book} significantly broadened the theoretical
+landscape by situating SE within the \emph{mathematical principles of the
+information world}, formulating fundamental information laws and the
+Information Science Principles of AI (ISPAI), providing axiomatic foundations
+for a comprehensive structural information theory.
+
+\paragraph{Theoretical Analysis.}
+Subsequent research has elucidated SE's properties and forged connections with
+established graph-theoretic concepts.
+The ``togetherness'' metric~\cite{ljm2021improvingTogetherness} uses SE
+reduction to quantify the efficacy of network integration when adding
+inter-community edges.
+\cite{liu2022similaritygap} established a significant theoretical link between
+SE and spectral graph theory: for any undirected graph, the difference between
+SE and the von Neumann graph entropy (VNE) is bounded within the interval
+$[0,\gamma]$, formally connecting SE to spectral properties of the graph
+Laplacian.
+\cite{yang2024incremental} proposed incremental computation paradigms for
+dynamic graphs, enabling efficient encoding tree updates as the network evolves.
+
+\paragraph{Extensions.}
+The original formulation targets simple graphs; significant research has
+extended SE to more complex network structures.
+For directed graphs,~\cite{yaopan2019flowDirected} introduced a localized 2D
+SE via a flow-based algorithm, while~\cite{wxb2024rwedirected} proposed a
+random walk-based entropy (RWE) with a proven theoretical connection to VNE.
+Multi-relational SE~\cite{cao2024multi} uses a random surfing model that
+jointly optimizes node and relation selection.
+The \emph{infected tree entropy} (ITE)~\cite{wxb2023findingThesource}
+specializes SE for source localization in information cascades.
+SE-guided probabilistic coding~\cite{huang2024structuralProbCoding}
+regularizes embeddings in natural language understanding tasks.
+
+\subsection{Computational Algorithms}
+\label{subsec:algorithms}
+
+Table~\ref{tab:algorithms} summarizes all known SE minimization algorithms.
+We organize them by optimization strategy.
+
+\begin{table}[ht]
+\centering
+\caption{Summary of SE minimization algorithms.
+$n$: nodes; $m$: edges; $t$: iterations; $k$: flat clusters; $h$: arbitrary
+tree depth.}
+\label{tab:algorithms}
+\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llllll}
+\toprule
+\textbf{Algorithm} & \textbf{Levels} & \textbf{Constraint} &
+\textbf{Time Complexity} & \textbf{Code} & \textbf{Lang} \\
+\midrule
+HCSE~\cite{pan2021information}
+  & $h$ & Unconstrained & $O(n^2)$
+  & \href{https://github.com/Wu-Junran/SEP}{Link} & Python \\
+deDoc~\cite{li2018dedoc}
+  & 2/3 & Unconstrained & $O(n\log^2 n)$ or $O(n^2)$
+  & \href{https://github.com/yinxc/structural-information-minimisation}{Link} & Java \\
+deDoc2~\cite{li2023dedoc2}
+  & $h$ & Unconstrained & $O(n^2)$
+  & \href{https://github.com/zengguangjie/deDoc2}{Link} & Java \\
+SSE~\cite{zeng2024semiSSE}
+  & $h$ & Label, Pairwise & $O(h(m\log n+n))$
+  & \href{https://github.com/SELGroup/SSE}{Link} & Python \\
+SSSE~\cite{zeng2024scalableSSSE}
+  & $h$ & Label, Pairwise & $O(n\log^2 n + nkt)$
+  & \href{https://github.com/SELGroup/SSSE}{Link} & Python \\
+SuperTAD~\cite{zhang2021supertad}
+  & $h$ & Contiguity & $O(n^4 k^2 h)$
+  & \href{https://github.com/deepomicslab/SuperTAD}{Link} & C++ \\
+SuperTAD2~\cite{ling2024supertad2}
+  & $h$ & Contiguity & $O(n^4 k^2 h)$
+  & \href{https://github.com/deepomicslab/SuperTAD}{Link} & C++ \\
+PYSEAT~\cite{chen2022pyseat}
+  & $h$ & Contiguity & $O(n\log n)$
+  & \href{https://github.com/deepomicslab/SEAT}{Link} & Python \\
+LSENet~\cite{sun2024lsenet}
+  & 2 & Unconstrained & $O(nm)$
+  & \href{https://github.com/ZhenhHuang/LSEnet}{Link} & Python \\
+DeSE~\cite{zhang2025dese}
+  & 2 & Unconstrained & $O(nm)$
+  & --- & Python \\
+CoDeSEG~\cite{xian2025communitySEGame}
+  & 2 & Overlapping & $O(nt)$
+  & \href{https://github.com/SELGroup/CoDeSEG}{Link} & C++ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\paragraph{Heuristic Methods.}
+deDoc~\cite{li2018dedoc} pioneered SE minimization for genomic structure
+detection with a greedy merging strategy.
+SEAT~\cite{chen2022pyseat} adapts this for single-cell omics by applying SE
+minimization on cell--cell graphs to reveal nested subpopulations.
+HCSE~\cite{pan2021information} is a widely used, general-purpose hierarchical
+clustering framework that recursively isolates the sparsest levels of a
+hierarchy through SE-guided optimization, automatically determining hierarchy
+depth without hyperparameters.
+
+\paragraph{Constrained Optimization.}
+SuperTAD~\cite{zhang2021supertad} combines interval dynamic programming with
+SE minimization under \emph{spatial contiguity} constraints.
+SuperTAD2~\cite{ling2024supertad2} introduces matrix discretization and
+approximation strategies achieving ${\approx}10\times$ speedup.
+deDoc2~\cite{li2023dedoc2} extends the contiguity approach to single-cell
+analysis to resolve chromatin hierarchies across the cell cycle.
+SSE~\cite{zeng2024semiSSE} unifies \emph{semi-supervised} constraints
+(must-link / cannot-link pairwise constraints and label constraints) by
+reformulating SE to penalize violations during encoding tree construction.
+SSSE~\cite{zeng2024scalableSSSE} scales this to massive datasets via graph
+sampling and incremental cluster insertion, reducing time complexity from
+quadratic to nearly linear.
+
+\paragraph{Differentiable / Gradient-Based Methods.}
+LSENet~\cite{sun2024lsenet} creates a differentiable SE formulation in
+hyperbolic space, enabling cluster-free hierarchical partitioning via
+backpropagation.
+DeSE~\cite{zhang2025dese} pioneers a \emph{soft assignment structural entropy}
+allowing co-design of graph topology and cluster assignments in an
+end-to-end model.
+CoDeSEG~\cite{xian2025communitySEGame} offers a game-theoretic formulation
+for near-linear-time overlapping community detection.
+
+\paragraph{Complexity and Trade-off Analysis.}
+Heuristic approaches offer scalability and generality but are limited in their
+ability to incorporate domain knowledge.
+Constrained methods integrate domain-specific knowledge at the cost of
+broader applicability.
+Differentiable methods bridge SE and deep learning but introduce
+hyperparameter sensitivity and potential interpretability concerns.
+A key open challenge is hybridizing these paradigms to achieve an optimal
+balance of scalability, accuracy, and interpretability, especially for dynamic
+or heterogeneous networks (see Section~\ref{sec:open}).
 

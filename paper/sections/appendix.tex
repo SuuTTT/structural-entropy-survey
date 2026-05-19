@@ -1,3 +1,58 @@
-\section{Survey Protocol}
-TODO.
+\section{Survey Protocol and Companion Library}
+\label{sec:appendix}
+
+\subsection{Literature Search Protocol}
+
+This survey covers SE-related publications from January 2016 (the publication
+date of the foundational SE paper~\cite{Li2016}) through May 2026.
+We conducted systematic searches on Google Scholar, Semantic Scholar, arXiv,
+and the ACL/ACM/IEEE digital libraries using the following query terms:
+``structural entropy'', ``encoding tree'', ``SE minimization'',
+``hierarchical structural entropy'', and ``Li Angsheng''.
+We included papers that (a)~directly use SE as a primary methodology,
+(b)~propose extensions of the SE formalism, or (c)~introduce SE-based
+applications.
+Papers using the term ``structural entropy'' in a purely figurative sense
+without connection to the Li--Pan framework~\cite{Li2016} were excluded.
+
+\subsection{The \texttt{glass-jax} Companion Library}
+
+\texttt{glass-jax} (Graph-based Latent Abstraction \& Structural Segmentation
+in JAX) is a fully differentiable, hardware-accelerated framework for graph
+clustering that serves as this survey's reproducibility artifact.
+
+\paragraph{Core objectives.}
+\begin{itemize}
+  \item \textbf{Soft Modularity}: relaxes the Louvain objective via
+        $Q = \frac{1}{2m}\operatorname{Tr}(S^\top B S)$ with soft assignment
+        matrix $S$.
+  \item \textbf{Soft Map Equation}: a differentiable approximation of Infomap
+        computing the description length of a random walk over soft
+        assignments.
+  \item \textbf{Soft 2D Structural Entropy (Glass-SE)}: soft-assignment
+        implementation of Definition~\ref{def:se-tree}, enabling gradient
+        flow through the SE objective.
+\end{itemize}
+
+\paragraph{Optimization engine.}
+The \emph{multi-start \texttt{vmap} engine} runs $B$ parallel optimization
+trajectories using \texttt{jax.vmap}, initialized with 1 spectral embedding
+and $B-1$ random Gaussian initializations.
+Temperature annealing decays $\tau$ from 1.0 to 0.01 over 500 Adam steps,
+sharpening soft assignments into near-discrete decisions.
+The trajectory achieving the best (unscaled) objective value is selected.
+
+\paragraph{Benchmarking interface.}
+All experiments in Section~\ref{sec:benchmark} are fully reproducible via:
+\begin{verbatim}
+  git clone https://github.com/SELGroup/glass-jax
+  cd glass-jax
+  pip install -e ".[dev]"
+  python experiments/benchmark_same_protocol.py
+\end{verbatim}
+
+\paragraph{Requirements.}
+JAX~$\ge$~0.4, \texttt{optax}, \texttt{networkx}, \texttt{scikit-learn},
+\texttt{python-louvain}, \texttt{infomap} (C++ wrapper).
+GPU/TPU acceleration is automatic via JAX's XLA compiler.
 

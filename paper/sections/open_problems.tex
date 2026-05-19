@@ -1,3 +1,79 @@
-\section{Open Problems}
-TODO.
+\section{Open Problems and Future Directions}
+\label{sec:open}
+
+Despite a decade of rapid progress, several fundamental challenges remain open:
+
+\subsection*{O1. Unified Framework for Complex Network Types}
+
+Existing SE variants have been developed independently for directed graphs,
+hypergraphs, multi-relational graphs, and dynamic networks.
+A pressing open problem is the development of a \emph{unified SE framework}
+that handles these structures under a single formalism.
+This would require extending the encoding-tree formulation to support
+non-standard volume and cut measures, and establishing formal connections
+between the specialized variants.
+
+\subsection*{O2. Scalable SE Minimization}
+
+The dominant heuristic SE algorithms scale as $O(n^2)$, limiting
+applicability to graphs with hundreds of thousands of nodes.
+Although SSSE achieves nearly linear complexity under a sampling approximation,
+theoretical guarantees on the approximation quality remain weak.
+Developing provably good approximation algorithms for SE minimization, analogous
+to those for modularity and the map equation, is an important open direction.
+
+\subsection*{O3. Differentiable SE for Deep Learning Integration}
+
+Current differentiable SE formulations (LSENet, DeSE, Glass-SE) are restricted
+to 2-level (flat) trees.
+Extending differentiable SE to arbitrary-depth hierarchical trees---while
+maintaining well-defined gradients and computational tractability---is an open
+problem.
+This would enable end-to-end learning of hierarchical representations in GNNs
+and Transformers.
+
+\subsection*{O4. SE and Large Language Models}
+
+The recent success of LLMs raises the question of whether SE can be used to
+analyse or improve the latent graph structures induced by LLM attention
+patterns and knowledge graphs.
+Preliminary connections have been drawn via SE-based knowledge
+quantification~\cite{wang2023quantifyingKnowledge} and graph-augmented
+reasoning~\cite{li2023graphMeetsLLM}, but a principled SE-based theory of LLM
+structure is absent.
+
+\subsection*{O5. Theoretical Connections to Other Complexity Measures}
+
+While~\cite{liu2022similaritygap} established a bound between SE and VNE, the
+exact relationship between SE and other information-theoretic graph measures
+(e.g., Kolmogorov complexity, Fisher information, persistent homology) is not
+well understood.
+A deeper theoretical investigation would both strengthen SE's foundations and
+enable new algorithmic insights.
+
+\subsection*{O6. SE in Partially Observable Environments}
+
+SE-based RL methods (SISA, SIRD, SI2E) have been developed for fully
+observable settings.
+Extending SE to partial observability---where the agent's state graph is
+uncertain or must be inferred---is an important frontier for real-world
+applicability.
+
+\subsection*{O7. Benchmark Standardization}
+
+A major bottleneck for the field is the absence of a standardized evaluation
+protocol.
+Different papers use different datasets, train--test splits, and evaluation
+metrics, making direct comparison difficult.
+We call for the community to adopt a standard benchmark suite (as partially
+initiated in Section~\ref{sec:benchmark}) with open, reproducible
+implementations.
+
+\subsection*{O8. SE for Fairness and Privacy}
+
+The use of SE to deliberately obscure community structure~\cite{liu2019rem}
+suggests promising applications in \emph{privacy-preserving graph publishing}
+and \emph{fairness-aware graph learning}.
+A principled theory connecting SE-based obfuscation to differential privacy
+guarantees remains an open problem.
 

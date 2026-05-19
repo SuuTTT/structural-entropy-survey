@@ -1,3 +1,105 @@
 \section{Introduction}
-TODO.
+\label{sec:introduction}
+
+Information lies at the heart of artificial intelligence.
+From Shannon's entropy~\cite{shannon1948mathematical} guiding learning
+algorithms to the Information Bottleneck~\cite{tishby2000information} shaping
+representations, virtually every paradigm in AI can be viewed as
+compressing, transferring, organizing, or extracting meaning from information.
+Yet, while much of classical information theory is concerned with quantities
+of uncertainty at a \emph{local} or \emph{pairwise} level,
+\textbf{Structural Entropy (SE)}~\cite{Li2016} offers a fundamentally
+distinct and complementary perspective: it captures the \emph{global
+structure} and \emph{hierarchical uncertainty} embedded within complex
+information systems.
+
+At its core, SE provides a rigorous method to quantify and decode the
+uncertainty embedded in the architecture of a complex system, modelled as a
+graph or matrix.
+Its significance for the AI community is twofold:
+
+\begin{itemize}
+  \item \textbf{Metric.}
+        SE serves as a fundamental metric that quantifies a system's intrinsic
+        uncertainty.
+        Low SE signals a clear, efficient hierarchical organization---implying
+        functional coherence and robustness.
+        High SE indicates a system that is difficult to decompose, approaching
+        the behaviour of a random graph.
+        This analytical power is exploited in privacy-preserving graph analysis
+        (deliberately increasing SE to obscure community
+        structure~\cite{liu2019rem}), knowledge
+        quantification~\cite{wang2023quantifyingKnowledge}, and AI safety
+        evaluation~\cite{zeng2025si2af}.
+
+  \item \textbf{Optimization principle.}
+        SE provides a principled method to \emph{discover} a system's optimal
+        hierarchical structure.
+        Minimizing SE decodes the most efficient information-theoretic
+        abstraction of a system, revealing a nested, hierarchical partitioning
+        of its components---the ``true'' community
+        structure~\cite{Li2016} or most effective decision
+        hierarchy~\cite{zeng2025sidmJMLR}.
+\end{itemize}
+
+\subsection*{Motivation: Why a Decade Survey Now?}
+
+The foundational SE paper~\cite{Li2016} was published a decade ago.
+In the intervening years, SE-based methods have proliferated across graph
+pooling~\cite{wu2022pooling,wxb2024hi-part}, data
+augmentation~\cite{wu2023sega,wang2023user}, graph structure
+learning~\cite{zou2023segsl,duan2024structuralGSL}, reinforcement
+learning~\cite{zeng2025sidmJMLR,zeng2023hierarchicalSISA,zeng2024effectiveSI2E},
+bioinformatics~\cite{zhang2021supertad,chen2022pyseat,li2023dedoc2},
+social-network analysis~\cite{peng2024zjyun,yang2024sebot,cao2024socialevent},
+and pattern recognition~\cite{zhu2023HiTIN,zeng2023lesion,wang2024secodecSpeech}.
+Despite this rapid proliferation, a comprehensive and systematic review
+consolidating these advances has been lacking.
+
+This article aims to fill that critical gap.
+The present work substantially extends our earlier conference
+survey~\cite{su2025ijcai} published at IJCAI 2025:
+
+\begin{enumerate}
+  \item \textbf{Expanded theory.}
+        We provide a self-contained, rigorous treatment of SE's mathematical
+        foundations, including proofs of key properties and formal comparisons
+        with alternative graph-complexity measures (modularity, map equation,
+        von Neumann entropy).
+
+  \item \textbf{Comprehensive algorithm catalogue.}
+        We survey all known SE minimization algorithms, extending the
+        conference table with complexity analysis, constraint categories, and
+        reproducibility notes.
+
+  \item \textbf{Reproducibility benchmark.}
+        We present a new empirical evaluation comparing SE-based graph
+        clustering objectives against Louvain, Infomap, and differentiable
+        baselines across multiple datasets and random seeds using the
+        \texttt{glass-jax} companion library.
+
+  \item \textbf{Expanded application coverage.}
+        We include additional application domains (speech processing,
+        geoscience knowledge quantification, LLM integration) and updated
+        literature through 2026.
+
+  \item \textbf{Open problems.}
+        We provide a structured discussion of open research challenges and
+        future directions that were absent from the conference version.
+\end{enumerate}
+
+\subsection*{Paper Organization}
+
+The remainder of this survey is organized as follows.
+Section~\ref{sec:taxonomy} introduces a taxonomy of SE research and its
+formal definitions.
+Section~\ref{sec:theory} covers theoretical foundations.
+Section~\ref{sec:algorithms} surveys computational algorithms for SE
+minimization.
+Section~\ref{sec:learning} examines SE-driven learning paradigms (graph
+learning and reinforcement learning).
+Section~\ref{sec:applications} reviews cross-domain applications.
+Section~\ref{sec:benchmark} presents the reproducibility benchmark.
+Section~\ref{sec:open} discusses open problems and future directions.
+Section~\ref{sec:conclusion} concludes.
 

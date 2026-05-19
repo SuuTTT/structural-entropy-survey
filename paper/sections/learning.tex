@@ -1,3 +1,161 @@
-\section{Structural Entropy in Graph Learning and Dynamics}
-TODO.
+\section{Structural Entropy in Graph Learning and Reinforcement Learning}
+\label{sec:learning}
+
+\subsection{Graph Learning Paradigms}
+\label{subsec:graph-learning}
+
+SE has emerged as a powerful information-theoretic tool for graph
+representation learning, offering a principled, quantitative measure of a
+graph's inherent hierarchical organization.
+
+\subsubsection{Graph Pooling}
+
+In graph-level tasks, pooling operations are essential for downsampling nodes
+to create compact representations of entire graphs.
+Traditional methods often suffer from information loss by applying stepwise
+local pooling, which destroys the larger community structure.
+\emph{SE Pooling} (SEP)~\cite{wu2022pooling} addresses this by using global
+SE minimization to generate all cluster assignments simultaneously, preserving
+the multi-level community map.
+\emph{Hi-PART}~\cite{wxb2024hi-part} constructs Hierarchical Partition Trees
+using SE, explicitly modelling the nested, multi-scale nature of graph
+structures and surpassing the expressive power of the standard
+Weisfeiler-Lehman test.
+\emph{EDEN}~\cite{li2025eden} further extends SE-based pooling to dynamic
+and evolving graphs.
+
+\subsubsection{Structure Augmentation}
+
+Graph structure augmentation underpins modern self-supervised learning on
+graphs.
+Random augmentations risk discarding crucial information; SE provides a
+principled way to guide this process by identifying and preserving the graph's
+intrinsic low-entropy structure.
+\emph{SEGA}~\cite{wu2023sega} constructs a stable anchor view by finding an
+encoding tree with minimal SE, filtering noise while maintaining the essential
+community hierarchy for contrastive learning.
+\emph{USER}~\cite{wang2023user} incorporates SE directly into its objective
+function to learn an ``innocuous graph'' robust to perturbations.
+\emph{SE-GSL}~\cite{zou2023segsl} uses a three-stage optimization: maximizing
+1D SE to enhance information content, minimizing high-dimensional SE to
+abstract the graph into hierarchical trees, then using deduction SE to guide
+adaptive graph reconstruction.
+\emph{SeGSL}~\cite{duan2024structuralGSL} extends this by using SE-derived
+minimal-tree structures to guide multi-view fusion based on community
+influence.
+
+\subsubsection{Graph Kernels and Embedding Dimensions}
+
+\emph{HAGK}~\cite{yang2024graphkernal} leverages SE to generate multi-level,
+abstract representations of each graph's intrinsic organization for use in a
+graph kernel that measures similarity between entire graphs.
+\emph{MGEDE}~\cite{yang2023MGEDE} calculates a high-level SE from multi-order
+adjacency matrices and minimizes it alongside attribute entropy, explicitly
+determining the most suitable number of embedding dimensions.
+
+\subsection{Reinforcement Learning Integration}
+\label{subsec:rl-methods}
+
+Integrating SE into reinforcement learning (RL) equips agents with a mechanism
+to perceive and decompose complex problems, moving beyond flat state--action
+spaces toward a structured understanding of their environment.
+
+\subsubsection{State and Action Abstraction}
+
+The \emph{SISA}~\cite{zeng2023hierarchicalSISA} framework uncovers hierarchical
+state structure by optimizing an encoding tree from a state graph using SE,
+creating an efficient and task-relevant state representation.
+\emph{SIRD}~\cite{zeng2023effective} reframes role discovery in multi-agent RL
+as hierarchical action space clustering via SE minimization on an action graph.
+
+\subsubsection{Intrinsic Motivation and Exploration}
+
+\emph{SI2E}~\cite{zeng2024effectiveSI2E} formulates an intrinsic reward by
+maximizing value-conditional SE: agents are encouraged to explore states where
+their actions lead to the greatest reduction in structural uncertainty.
+\emph{SIDM}~\cite{zeng2025sidmJMLR} utilizes SE at multiple stages to
+structure the entire decision-making and skill-discovery pipeline.
+\emph{COLLAB-MARL}~\cite{su2025emergencecollab} uses SE to quantify
+interaction complexity in multi-agent systems, revealing emergent coalition
+structures by minimizing the SE of a dynamic agent interaction graph.
+
+\subsubsection{Discussion}
+
+SE integration into RL provides mathematical tools to build a \emph{cognitive
+architecture} for agents: parsing their world into a hierarchy of concepts,
+skills, and goals.
+SISA and SIRD demonstrate how SE can automate the discovery of abstractions
+that have historically required significant human engineering.
+SI2E shows that exploration need not be random---it can be a deliberate
+process of \emph{information seeking} aimed at resolving structural
+uncertainty.
+Key future directions include scaling these methods to partially observable
+environments, meta-RL, and curriculum learning.
+
+\subsection{Cross-Domain Applications}
+\label{sec:applications}
+
+\subsubsection{Bioinformatics}
+
+SE-based genomic analysis began with cancer subtyping~\cite{li2016cancer},
+correlating entropy-minimized gene expression patterns with clinical outcomes.
+The first SE-based TAD detector, \emph{deDoc}~\cite{li2018dedoc}, identified
+large-scale topologically associating domains from Hi-C data.
+\emph{SuperTAD}~\cite{zhang2021supertad} employed dynamic programming to
+resolve hierarchical chromatin domains; \emph{SuperTAD2}~\cite{ling2024supertad2}
+significantly accelerated this via matrix discretization.
+At single-cell resolution, \emph{SEAT}~\cite{chen2022pyseat} minimizes global
+uncertainty in cell--cell graphs to improve pseudo-time inference.
+\emph{deTOKI}~\cite{li2021detoki} analyzes regulatory dynamics at the
+single-cell level, and \emph{deDoc2}~\cite{li2023dedoc2} resolves
+cell-cycle-dependent chromatin hierarchies.
+
+\subsubsection{Transportation and Geoscience}
+
+\emph{MultiSPANS}~\cite{zou2024multispans} improves traffic forecasting by
+using SE minimization to optimize spatial attention mechanisms, generating
+hierarchical encoding trees of road networks.
+The ``Scientific X-ray'' method~\cite{wxb2022scientificxray} constructs
+``idea trees'' from citation networks to identify high-potential research
+directions.
+\emph{KQI}~\cite{wang2023quantifyingKnowledge} redefines knowledge
+quantification by measuring hierarchical disorder differences in citation
+networks, producing a Knowledge Quantification Index that identifies
+overlooked but influential works and Nobel Prize-winning topics.
+
+\subsubsection{Social Networks}
+
+\emph{UnDBot}~\cite{peng2024zjyun} offers unsupervised bot detection via
+heterogeneous SE on multi-relational graphs.
+\emph{SEBot}~\cite{yang2024sebot} integrates SE with multi-view contrastive
+learning for adversarially robust detection.
+\emph{SIASM}~\cite{zeng2024socialbots} models how social bots optimally select
+followers using conditional SE minimization.
+\emph{SI2AF}~\cite{zeng2025si2af} evaluates news-detection system robustness
+using an SE-based influence metric that combines content relevance with
+community structure.
+For social event detection, \emph{HISEvent}~\cite{cao2024socialevent}
+incrementally builds message graphs with 1D SE and detects events using 2D SE
+optimization; \emph{ADP-SEMEvent}~\cite{yang2024eventdetect} integrates
+adaptive differential privacy; \emph{HyperSED}~\cite{yu2024hyperSED} uses
+hyperbolic-space differentiable SE-guided partitioning.
+
+\subsubsection{Pattern Recognition}
+
+In \emph{visual computing}, \emph{SLED}~\cite{zeng2023lesion} detects skin
+lesions by minimizing the entropy of multiscale superpixel graphs.
+\emph{SIT-HSS}~\cite{xie2025superpixel} performs hierarchical superpixel
+segmentation via iterative SE-guided merging.
+
+In \emph{natural language processing}, \emph{HiTIN}~\cite{zhu2023HiTIN}
+injects the syntactic hierarchy of sentences via SE into graph-based
+representations for hierarchical text classification.
+\emph{MASGCN}~\cite{huang2025MASGCN} applies an SE-based loss to guide a GCN
+for aspect-based sentiment analysis.
+
+In \emph{speech processing}, \emph{SECodec}~\cite{wang2024secodecSpeech}
+applies SE to cluster feature nodes for efficient compressed speech
+representation.
+\emph{SEVC}~\cite{wang2025voice} uses 2D SE to group reference speech frames
+into semantic clusters for high-fidelity voice conversion.
 
