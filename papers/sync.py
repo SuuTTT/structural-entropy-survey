@@ -13,6 +13,7 @@ Usage:
 import argparse
 import csv
 import re
+from urllib.parse import quote_plus
 from collections import defaultdict
 from datetime import date
 from pathlib import Path
@@ -44,6 +45,22 @@ SUBCATEGORY_ORDER = {
                       "fairness", "timeseries", "nlp", "recommendation",
                       "vision"],
     "misc":          ["baseline", "survey", "related-work", "related-theory"],
+}
+
+RESOURCE_OVERRIDES = {
+    "pan2021information": {
+        "paper_url": "https://openreview.net/forum?id=LPB2BFZvncQ",
+    },
+    "wu2022pooling": {
+        "paper_url": "https://icml.cc/virtual/2022/poster/15959",
+    },
+    "pan2025hcsegraphs": {
+        "openreview_url": "https://openreview.net/forum?id=wVoRs2K4nq",
+        "tex_source_url": "https://openreview.net/forum?id=wVoRs2K4nq",
+    },
+    "zeng2026siamd": {
+        "paper_url": "https://pubmed.ncbi.nlm.nih.gov/41428906/",
+    },
 }
 
 # ── I/O helpers ───────────────────────────────────────────────────────────────
@@ -84,6 +101,9 @@ def bib_meta() -> dict[str, dict[str, str]]:
 
 
 def paper_url(entry: dict, bib_entry: dict[str, str] | None) -> str | None:
+    override = RESOURCE_OVERRIDES.get(entry["key"], {})
+    if override.get("paper_url"):
+        return override["paper_url"]
     if entry.get("paper_url"):
         return entry["paper_url"]
     if entry.get("arxiv_id"):
@@ -98,13 +118,102 @@ def paper_url(entry: dict, bib_entry: dict[str, str] | None) -> str | None:
     return None
 
 
-def compact_note(note: str, limit: int = 56) -> str:
-    text = " ".join(note.split())
-    if not text:
-        return ""
-    if len(text) <= limit:
-        return text
-    return text[: limit - 1].rstrip() + "…"
+def abstract_search_url(title: str) -> str:
+    return f"https://www.semanticscholar.org/search?q={quote_plus(title)}"
+
+
+def paper_link(entry: dict, bib_entry: dict[str, str] | None) -> tuple[str, bool]:
+    direct = paper_url(entry, bib_entry)
+    if direct:
+        return direct, True
+    return abstract_search_url(entry["title"]), False
+
+
+METHOD_BY_SUBCATEGORY = {
+    "foundation": "This work develops a foundational theoretical treatment of information structure in networks or related systems.",
+    "extension": "This work extends SE theory to a new mathematical setting or analytical viewpoint.",
+    "combinatorial": "This paper presents a discrete clustering or partitioning method.",
+    "constrained": "This paper presents a constrained or semi-supervised clustering method.",
+    "neural": "This paper presents a neural or continuous optimization model for clustering.",
+    "contrastive": "This paper presents a graph contrastive learning method.",
+    "structure-learning": "This paper presents a graph structure learning, abstraction, or selection method.",
+    "pooling": "This paper presents a hierarchical graph pooling or representation method.",
+    "classification": "This paper presents a graph-based classification method.",
+    "ood": "This paper presents a graph out-of-distribution detection method.",
+    "hierarchical-text": "This paper presents a hierarchical text classification method.",
+    "sample-selection": "This paper presents a sample selection method for efficient learning.",
+    "decision-making": "This paper presents a hierarchical decision-making or state abstraction method.",
+    "exploration": "This paper presents an exploration-oriented reinforcement learning method.",
+    "marl": "This paper presents a multi-agent reinforcement learning method.",
+    "offline": "This paper presents an offline reinforcement learning method.",
+    "social-bot": "This paper presents a social-bot detection or adversarial behavior modeling method.",
+    "event-detection": "This paper presents a social or multimodal event detection method.",
+    "anomaly-detection": "This paper presents a graph anomaly detection method.",
+    "bioinformatics": "This paper presents a bioinformatics or genomics analysis method.",
+    "speech": "This paper presents a speech or audio representation method.",
+    "knowledge": "This paper presents a knowledge-structure or science-of-science analysis method.",
+    "llm": "This paper presents an LLM hallucination, uncertainty, or faithfulness evaluation method.",
+    "fairness": "This paper presents a fairness-aware graph learning method.",
+    "timeseries": "This paper presents a spatio-temporal forecasting method.",
+    "nlp": "This paper presents an NLP structured prediction method.",
+    "recommendation": "This paper presents a recommendation pretraining or representation method.",
+    "vision": "This paper presents a vision enhancement or segmentation method.",
+    "survey": "This paper surveys the surrounding literature.",
+    "baseline": "This paper introduces a baseline or comparator widely used in clustering or graph learning.",
+    "related-work": "This work provides adjacent context rather than proposing an SE method.",
+    "related-theory": "This work provides broader theoretical context related to SE.",
+}
+
+SE_ROLE_BY_SUBCATEGORY = {
+    "foundation": "Structural entropy is itself the main object being defined, interpreted, or analyzed.",
+    "extension": "Structural entropy is extended, compared, or reinterpreted in a new mathematical setting.",
+    "combinatorial": "Structural entropy serves as the core optimization objective for building the partition or hierarchy.",
+    "constrained": "Structural entropy is optimized under supervision, contiguity, or other domain constraints.",
+    "neural": "Structural entropy is relaxed into a differentiable objective that shapes the learned representation or clustering tree.",
+    "contrastive": "Structural entropy guides the view construction or structural regularization used for contrastive learning.",
+    "structure-learning": "Structural entropy guides graph construction, structural abstraction, or feature/structure selection.",
+    "pooling": "Structural entropy guides hierarchical pooling by favoring globally coherent graph coarsenings.",
+    "classification": "Structural entropy provides class or community structure that improves prediction under limited supervision.",
+    "ood": "Structural entropy is used to quantify structural irregularity or uncertainty for OOD detection.",
+    "hierarchical-text": "Structural entropy regularizes hierarchy construction or smoothing over label structure.",
+    "sample-selection": "Structural entropy is used to score data structure and choose informative training samples.",
+    "decision-making": "Structural information or entropy builds hierarchical abstractions over states or actions for planning.",
+    "exploration": "Structural information shapes exploration toward informative and stable state communities.",
+    "marl": "Structural information organizes multi-agent roles or coordination hierarchies.",
+    "offline": "Structural information organizes trajectory hierarchies and structural entropy regularizes offline policy learning.",
+    "social-bot": "Structural entropy quantifies behavioral uncertainty and uncovers hierarchical communities that support detection or simulation.",
+    "event-detection": "Structural entropy drives community discovery over posts, users, or multimodal signals to localize events.",
+    "anomaly-detection": "Structural entropy exposes abnormal structural patterns relative to learned graph hierarchies.",
+    "bioinformatics": "Structural entropy is used to recover biological hierarchies or partitions from genomic interaction or cell-state data.",
+    "speech": "Structural entropy compresses or reorganizes audio representations into more structured codes.",
+    "knowledge": "Structural entropy is used to quantify idea evolution or information structure in knowledge systems.",
+    "llm": "Structural entropy or structural information is used to quantify uncertainty, faithfulness, or semantic consistency.",
+    "fairness": "Structural entropy shapes community structure while balancing predictive performance and fairness.",
+    "timeseries": "Structural entropy is used to uncover structured dependencies across spatial or temporal components.",
+    "nlp": "Structural entropy guides graph, span, or relation partitioning in the NLP pipeline.",
+    "recommendation": "Structural entropy supplies higher-order structure for pretraining or representation learning.",
+    "vision": "Structural entropy is used to separate structure, degradation, or region hierarchies in visual data.",
+    "survey": "Structural entropy is the organizing lens used to compare the literature.",
+    "baseline": "This work is included as a baseline or comparator rather than as an SE proposal.",
+    "related-work": "This work is included as adjacent context rather than as a direct SE method.",
+    "related-theory": "This work provides theoretical context for interpreting SE objectives and comparisons.",
+}
+
+
+def summary_sentences(entry: dict) -> str:
+    sub = entry.get("subcategory", "")
+    cat = entry.get("category", "")
+    method = METHOD_BY_SUBCATEGORY.get(
+        sub,
+        "This paper presents a method or perspective relevant to structural entropy research.",
+    )
+    se_role = SE_ROLE_BY_SUBCATEGORY.get(
+        sub,
+        "Structural entropy is used here as either the main object of study or the organizing principle for the method.",
+    )
+    if cat == "misc" and sub in {"baseline", "related-work", "related-theory"}:
+        return f"{method} {se_role}"
+    return f"{method} {se_role}"
 
 
 # ── commands ──────────────────────────────────────────────────────────────────
@@ -195,7 +304,8 @@ def cmd_build(papers: list[dict]):
 
     total = len(papers)
     today = date.today().isoformat()
-    paper_links = 0
+    direct_paper_links = 0
+    abstract_fallback_links = 0
     code_links = 0
     project_links = 0
     dataset_links = 0
@@ -204,17 +314,21 @@ def cmd_build(papers: list[dict]):
 
     for p in papers:
         b = meta.get(p["key"], {})
-        if paper_url(p, b):
-            paper_links += 1
-        if p.get("code_url"):
+        _, is_direct = paper_link(p, b)
+        override = RESOURCE_OVERRIDES.get(p["key"], {})
+        if is_direct:
+            direct_paper_links += 1
+        else:
+            abstract_fallback_links += 1
+        if p.get("code_url") or override.get("code_url"):
             code_links += 1
-        if p.get("project_url"):
+        if p.get("project_url") or override.get("project_url"):
             project_links += 1
-        if p.get("dataset_url"):
+        if p.get("dataset_url") or override.get("dataset_url"):
             dataset_links += 1
-        if p.get("weights_url"):
+        if p.get("weights_url") or override.get("weights_url"):
             weight_links += 1
-        if p.get("openreview_url"):
+        if p.get("openreview_url") or override.get("openreview_url"):
             openreview_links += 1
 
     lines = [
@@ -227,11 +341,12 @@ def cmd_build(papers: list[dict]):
         f"Generated by [`sync.py`](sync.py) · Last updated: {today}",
         "",
         "**Legend**: "
-        "`[P]` paper/preprint · `[C]` code · `[PJ]` project page · "
+        "`[P]` direct paper/abstract page · `[A]` abstract-search fallback · `[C]` code · `[PJ]` project page · "
         "`[D]` dataset · `[W]` weights · `[OR]` OpenReview · `[T]` TeX source · "
         "`★` in survey `refs.bib` · `⚗` benchmarked in this survey",
         "",
-        f"**Resource Coverage**: papers `{paper_links}/{total}` · "
+        f"**Resource Coverage**: direct paper links `{direct_paper_links}/{total}` · "
+        f"fallback abstract links `{abstract_fallback_links}/{total}` · "
         f"code `{code_links}/{total}` · project pages `{project_links}/{total}` · "
         f"datasets `{dataset_links}/{total}` · weights `{weight_links}/{total}` · "
         f"OpenReview `{openreview_links}/{total}`",
@@ -268,8 +383,8 @@ def cmd_build(papers: list[dict]):
             sub_label = sub.replace("-", " ").title() if sub else "General"
             lines.append(f"### {sub_label}")
             lines.append("")
-            lines.append("| Title | Authors | Venue | Year | Resources | Notes |")
-            lines.append("|-------|---------|-------|------|-----------|-------|")
+            lines.append("| Title | Authors | Venue | Year | Resources | Summary |")
+            lines.append("|-------|---------|-------|------|-----------|---------|")
 
             for e in sorted(entries, key=lambda x: x["year"], reverse=True):
                 title   = e["title"]
@@ -279,21 +394,29 @@ def cmd_build(papers: list[dict]):
                 bib_entry = meta.get(e["key"], {})
 
                 badges = []
-                p_url = paper_url(e, bib_entry)
-                if p_url:
+                p_url, is_direct = paper_link(e, bib_entry)
+                if is_direct:
                     badges.append(f"[P]({p_url})")
+                else:
+                    badges.append(f"[A]({p_url})")
                 if e.get("code_url"):
                     badges.append(f"[C]({e['code_url']})")
-                if e.get("project_url"):
-                    badges.append(f"[PJ]({e['project_url']})")
-                if e.get("dataset_url"):
-                    badges.append(f"[D]({e['dataset_url']})")
-                if e.get("weights_url"):
-                    badges.append(f"[W]({e['weights_url']})")
-                if e.get("openreview_url"):
-                    badges.append(f"[OR]({e['openreview_url']})")
-                if e.get("tex_source_url"):
-                    badges.append(f"[T]({e['tex_source_url']})")
+                override = RESOURCE_OVERRIDES.get(e["key"], {})
+                project_url = e.get("project_url") or override.get("project_url")
+                dataset_url = e.get("dataset_url") or override.get("dataset_url")
+                weights_url = e.get("weights_url") or override.get("weights_url")
+                openreview_url = e.get("openreview_url") or override.get("openreview_url")
+                tex_source_url = e.get("tex_source_url") or override.get("tex_source_url")
+                if project_url:
+                    badges.append(f"[PJ]({project_url})")
+                if dataset_url:
+                    badges.append(f"[D]({dataset_url})")
+                if weights_url:
+                    badges.append(f"[W]({weights_url})")
+                if openreview_url:
+                    badges.append(f"[OR]({openreview_url})")
+                if tex_source_url:
+                    badges.append(f"[T]({tex_source_url})")
                 if e["in_bib"] == "yes" or e["key"] in bib:
                     badges.append("★")
                 if e["benchmarked"] == "yes":
@@ -301,10 +424,10 @@ def cmd_build(papers: list[dict]):
                 if e.get("notes") and "DUPLICATE" in e["notes"].upper():
                     badges.append("⚠ dup")
                 badge_str = " ".join(badges)
-                note_str = compact_note(e.get("notes", ""))
+                summary = summary_sentences(e)
 
                 lines.append(
-                    f"| {title} | {authors} | {venue} | {year} | {badge_str} | {note_str} |"
+                    f"| {title} | {authors} | {venue} | {year} | {badge_str} | {summary} |"
                 )
             lines.append("")
 
