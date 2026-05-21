@@ -1,0 +1,48 @@
+\section{Discussion}
+\label{sec:discussion}
+
+The decade of work surveyed above suggests that SE is best understood not as a
+single clustering score, but as a unifying principle for graph intelligence:
+systems become intelligible when their uncertainty can be reduced by a
+compact hierarchy.
+This interpretation explains why SE appears in apparently distant settings,
+including graph pooling, chromatin-domain discovery, event detection, social
+bot analysis, and reinforcement learning.
+In each case, the method searches for a structural abstraction that preserves
+the dominant organization while suppressing incidental variation.
+
+For TGINA's focus on graph intelligence and network applications, SE is
+especially useful because it connects three concerns that are often handled
+separately.
+First, it is a \emph{measure}: the entropy value summarizes how ordered or
+disordered a network is under a candidate hierarchy.
+Second, it is an \emph{optimizer}: minimizing the measure constructs the
+hierarchy itself.
+Third, it is a \emph{learning signal}: differentiable variants allow the same
+principle to shape GNN encoders, pooling layers, and decision abstractions.
+This measure--optimizer--learning-signal triad is the core reason SE deserves
+a full journal treatment rather than a short method catalogue.
+
+At the same time, the benchmark results caution against overclaiming.
+Topology-only SE objectives are most appropriate when communities correspond
+to structural bottlenecks.
+On attributed citation networks, semantic labels may be better explained by
+text features than by citation topology, and feature-augmented models such as
+LSENet can therefore dominate in accuracy.
+Conversely, on noisy synthetic topologies, differentiable SE remains
+competitive with or stronger than standard baselines.
+The practical lesson is that SE should be matched to the source of structure:
+pure topology for latent abstraction and network organization, feature-aware
+SE for semantic graph learning, and constrained SE for domain-specific
+structures such as genomic intervals.
+
+Finally, SE offers a promising language for trustworthy graph intelligence in
+LLM and autonomous-agent systems.
+GraphRAG pipelines, tool-use traces, memory graphs, and multi-agent interaction
+networks all produce evolving relational structures whose reliability depends
+on whether useful organization can be separated from noisy connectivity.
+SE can quantify that organization, detect disorder, and potentially guide the
+construction of stable retrieval or decision hierarchies.
+This connection remains early, but it gives a concrete path from classical
+structural information theory to the emerging graph intelligence problems
+that motivate the TGINA venue.

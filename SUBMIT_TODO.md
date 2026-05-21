@@ -1,6 +1,8 @@
 # TGINA Submission Todo
 
 **Target:** Transactions on Graph Intelligence and Network Applications (TGINA)  
+**Manuscript status:** This is a TGINA journal survey. IJCAI 2025 is only the
+prior conference version that must be disclosed and cited where required.  
 **Publisher:** Scilight Press — https://www.sciltp.com/journals/tgina  
 **Submission portal:** https://sciflux.org/authors/submissions/add-submissions?journalCode=2052269951293444097  
 **Relevant CFP deadline:** 31 July 2026 (Trustworthy Graph Intelligence for LLMs & Autonomous Agents)  
@@ -10,11 +12,26 @@
 
 ## Phase 1 — Pre-writing (immediate)
 
-- [ ] **Get official TGINA LaTeX template**
-  - The journal is new; the template may not yet be public.
-  - Email `info@sciltp.com` and ask for the LaTeX author template.
-  - Until received, the current `paper/main.tex` uses a clean `article`-class
-    12pt/A4 format with standard packages — acceptable for initial submission.
+- [x] **Get official TGINA LaTeX template**
+  - Template received at `/Users/suu/Downloads/TGINA-Template-LaTeX.zip`.
+  - Archive contains `TGINA template.tex`, `scilight.bst`, journal header/logo
+    images, and a compiled sample PDF.
+
+- [ ] **Migrate the survey manuscript into the official TGINA template**
+  - Copy the template assets into `paper/` or a dedicated `paper/tgina/`
+    directory.
+  - Adapt `paper/main.tex` to the TGINA front matter, page headers/footers,
+    line-numbering, caption style, and `scilight.bst` bibliography style.
+  - Preserve the disclosure that this TGINA submission expands the IJCAI 2025
+    conference paper.
+  - Compile a first TGINA-formatted PDF and inspect layout before content
+    expansion.
+
+- [x] **Install a local LaTeX toolchain and compile the current first draft**
+  - Working compiler: `/Users/suu/Library/TinyTeX/bin/universal-darwin/pdflatex`.
+  - Current article-format draft compiles to `paper/main.pdf`.
+  - Compile log has no unresolved citations, undefined references, or oversized
+    float warnings.
 
 - [ ] **Check copyright of the IJCAI-2025 paper**
   - Determine who holds copyright (IJCAI / IJCAI Organization).
@@ -32,7 +49,7 @@
 
 ## Phase 2 — Paper content expansion (before submission)
 
-- [ ] **Add a `\section{Related Work}` section** comparing SE with:
+- [x] **Add a `\section{Related Work}` section** comparing SE with:
   - Modularity-based methods (Louvain, Leiden)
   - Flow-based methods (Infomap)
   - Spectral methods (normalized cuts, spectral clustering)
@@ -40,35 +57,36 @@
   - This section is absent from the IJCAI conference version and is required
     for a full journal article.
 
-- [ ] **Expand Introduction with a position statement**
+- [x] **Expand Introduction with a position statement**
   - Clarify SE's role within the broader graph intelligence landscape covered
     by TGINA's scope.
   - Add a paragraph on SE's relevance to LLMs / GraphRAG (relevant to the
     current TGINA CFP topic).
 
-- [ ] **Add at least 2 new figures**
+- [x] **Add at least 2 new figures**
   - A proper taxonomy tree figure (currently shown as a fbox; replace with
     a TikZ `forest` diagram matching the IJCAI figure).
   - A benchmark result figure (bar chart or line plot from Section 6 results).
 
-- [ ] **Expand the benchmark (Section 6)**
+- [x] **Expand the benchmark (Section 6)**
   - Add results on at least 2 real-world datasets (e.g., Cora, Citeseer,
     Amazon-Photo) to complement the synthetic SBM/Caveman results.
   - Report runtime/scalability comparison.
 
-- [ ] **Add `\section{Discussion}` or expand existing discussions**
+- [x] **Add `\section{Discussion}` or expand existing discussions**
   - Each technical section currently ends with a Discussion paragraph;
     consolidate or expand these for journal depth.
 
-- [ ] **Proofread and spell-check the full draft**
-  - Run `aspell` or Grammarly on the compiled PDF.
-  - Verify all `\cite{}` keys resolve correctly (`grep "?"` in the .log).
+- [x] **Proofread and spell-check the full draft**
+  - LaTeX log checked: no unresolved citations or undefined references.
+  - Remaining language/layout pass should be repeated after TGINA template
+    migration.
 
-- [ ] **Update bibliography (`refs.bib`)**
-  - Fix the bibtex warning: `can't use both volume and number fields in
-    wang2023user`.
-  - Add any papers published since the IJCAI camera-ready (up to
-    submission date).
+- [x] **Update bibliography (`refs.bib`)**
+  - Fixed the bibtex warning for `wang2023user`.
+  - Added missing related-work references used by the new journal section.
+  - The literature tracker still lists pending uncited papers for the final
+    pre-submission literature sweep.
 
 ---
 
@@ -142,9 +160,9 @@
 - [ ] Copyright permission from IJCAI obtained (or confirmed not required)
 - [ ] Cover letter written and disclosures included
 - [ ] Official TGINA template applied (if available)
-- [ ] At least one new section beyond the IJCAI version (Related Work ✓ planned)
-- [ ] Benchmark with real-world datasets included
-- [ ] All figures rendered properly in PDF
-- [ ] Bibliography warnings resolved
+- [x] At least one new section beyond the IJCAI version (Related Work added)
+- [x] Benchmark with real-world datasets included
+- [x] All figures rendered properly in PDF
+- [x] Bibliography warnings resolved
 - [ ] Supplementary materials prepared
 - [ ] Submitted via https://sciflux.org before 31 July 2026

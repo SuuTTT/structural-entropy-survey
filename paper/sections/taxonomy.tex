@@ -101,72 +101,139 @@ formal spectral interpretation of SE.
 \label{subsec:taxonomy}
 
 Figure~\ref{fig:taxonomy} provides a high-level taxonomy organizing SE
-research into three pillars---\emph{Theory}, \emph{Learning Methods}, and
-\emph{Cross-Domain Applications}---each containing major sub-themes.
+research into four pillars---\emph{Theory}, \emph{Computational Algorithms},
+\emph{Learning Methods}, and \emph{Cross-Domain Applications}---each
+containing major sub-themes and representative works.
 We follow this taxonomy throughout the survey.
 
-\begin{figure}[ht]
+\definecolor{seRoot}{HTML}{6B4C9A}
+\definecolor{seTheory}{HTML}{DDEBFF}
+\definecolor{seAlgorithm}{HTML}{E5F4EE}
+\definecolor{seLearning}{HTML}{FFF0CC}
+\definecolor{seApplication}{HTML}{F8DDE3}
+\definecolor{seBorder}{HTML}{4D5966}
+
+\begin{figure}[p]
 \centering
-\fbox{\parbox{0.9\textwidth}{%
-\textbf{Structural Entropy Research}
-\begin{itemize}
-  \item \textbf{Theory}
-    \begin{itemize}
-      \item Foundational works: SE~\cite{Li2016}, ISPAI~\cite{li2024book}
-      \item Theoretical analysis: spectral gap~\cite{liu2022similaritygap},
-            incremental~\cite{yang2024incremental},
-            togetherness~\cite{ljm2021improvingTogetherness}
-      \item Extensions: directed~\cite{wxb2024rwedirected,yaopan2019flowDirected},
-            multi-relational~\cite{cao2024multi},
-            source localization~\cite{wxb2023findingThesource},
-            probabilistic coding~\cite{huang2024structuralProbCoding}
-    \end{itemize}
-  \item \textbf{Computational Algorithms}
-    \begin{itemize}
-      \item Heuristic: deDoc~\cite{li2018dedoc}, SEAT~\cite{chen2022pyseat},
-            HCSE~\cite{pan2021information}
-      \item Constrained: SuperTAD~\cite{zhang2021supertad},
-            deDoc2~\cite{li2023dedoc2},
-            SuperTAD2~\cite{ling2024supertad2},
-            SSE~\cite{zeng2024semiSSE},
-            SSSE~\cite{zeng2024scalableSSSE},
-            CoDeSEG~\cite{xian2025communitySEGame}
-      \item Differentiable: LSENet~\cite{sun2024lsenet},
-            DeSE~\cite{zhang2025dese}
-    \end{itemize}
-  \item \textbf{Learning Methods}
-    \begin{itemize}
-      \item Graph pooling: SEP~\cite{wu2022pooling},
-            Hi-PART~\cite{wxb2024hi-part}, EDEN~\cite{li2025eden}
-      \item Structure augmentation: SE-GSL~\cite{zou2023segsl},
-            SEGA~\cite{wu2023sega},
-            USER~\cite{wang2023user},
-            SeGSL~\cite{duan2024structuralGSL}
-      \item Kernels \& dimensions: HAGK~\cite{yang2024graphkernal},
-            MGEDE~\cite{yang2023MGEDE}
-      \item Reinforcement learning: SIRD~\cite{zeng2023effective},
-            SISA~\cite{zeng2023hierarchicalSISA},
-            SI2E~\cite{zeng2024effectiveSI2E},
-            COLLAB~\cite{su2025emergencecollab}
-    \end{itemize}
-  \item \textbf{Applications}
-    \begin{itemize}
-      \item Bioinformatics: cancer~\cite{li2016cancer},
-            TAD detection~\cite{zhang2021supertad,li2023dedoc2},
-            single-cell~\cite{chen2022pyseat,li2021detoki}
-      \item Transport \& geoscience:
-            traffic~\cite{zou2024multispans},
-            scientific knowledge~\cite{wxb2022scientificxray,wang2023quantifyingKnowledge}
-      \item Social networks: bot detection~\cite{peng2024zjyun,yang2024sebot},
-            event detection~\cite{cao2024socialevent,yang2024eventdetect,yu2024hyperSED},
-            safety~\cite{zeng2025si2af}
-      \item Pattern recognition: image~\cite{zeng2023lesion,xie2025superpixel},
-            text~\cite{zhu2023HiTIN,huang2025MASGCN},
-            speech~\cite{wang2024secodecSpeech,wang2025voice}
-    \end{itemize}
-\end{itemize}
-}}
-\caption{Taxonomy of Structural Entropy research (2016--2026).}
+\resizebox{\textwidth}{!}{%
+\begin{forest}
+for tree={
+  forked edges,
+  grow=east,
+  reversed=true,
+  anchor=base west,
+  parent anchor=east,
+  child anchor=west,
+  base=middle,
+  font=\scriptsize,
+  draw=seBorder,
+  edge={seBorder!70, line width=.35pt},
+  rounded corners=2pt,
+  align=center,
+  minimum height=1.55em,
+  inner xsep=3pt,
+  inner ysep=1.6pt,
+  s sep=3.5pt,
+  l sep=7pt,
+},
+where level=1{font=\scriptsize\bfseries,text width=5.4em}{},
+where level=2{font=\scriptsize\bfseries,text width=7.4em}{},
+where level=3{font=\scriptsize,text width=6.2em}{},
+where level=4{font=\scriptsize,text width=32em}{},
+leaf/.style={text width=32em,font=\scriptsize},
+rootnode/.style={
+  fill=seRoot,
+  text=white,
+  font=\scriptsize\bfseries,
+  rotate=90,
+  anchor=north,
+  text width=7.8em,
+  minimum height=2.2em
+},
+theory/.style={fill=seTheory},
+algorithm/.style={fill=seAlgorithm},
+learning/.style={fill=seLearning},
+application/.style={fill=seApplication}
+[
+  Structural Entropy,
+  rootnode,
+  calign=child,
+  calign child=2
+  [Theory, theory
+    [Foundational\\Theoretical Works, theory
+      [Foundation, theory
+        [SE~\cite{Li2016}; ISPAI~\cite{li2024book}, theory, leaf]
+      ]
+      [Theoretic\\Analysis, theory
+        [VNE gap~\cite{liu2022similaritygap}; incremental SE~\cite{yang2024incremental};\\ togetherness~\cite{ljm2021improvingTogetherness}, theory, leaf]
+      ]
+      [Extension\\Work, theory
+        [Directed SE~\cite{wxb2024rwedirected,yaopan2019flowDirected}; multi-relational SE~\cite{cao2024multi};\\ infected-tree entropy~\cite{wxb2023findingThesource}; probabilistic coding~\cite{huang2024structuralProbCoding};\\ propositional formulas~\cite{Zhang2021}, theory, leaf]
+      ]
+      [Related\\Principles, theory
+        [Shannon entropy~\cite{shannon1948mathematical}; information bottleneck~\cite{tishby2000information};\\ MDL~\cite{rissanen1978modeling}; causal models~\cite{pearl2009causality};\\ Dasgupta cost~\cite{dasgupta2016cost}; community detection survey~\cite{fortunato2010community}, theory, leaf]
+      ]
+      [Security\\Theory, theory
+        [Resistor graphs~\cite{Li2018}; network security strategies~\cite{li2015strategiesForsecurity};\\ natural-selection security theory~\cite{li2016securitytheory}, theory, leaf]
+      ]
+    ]
+    [Computational\\Approaches, algorithm
+      [Heuristic, algorithm
+        [deDoc~\cite{li2018dedoc}; SEAT~\cite{chen2022pyseat}; HCSE~\cite{pan2021information};\\ SEP~\cite{wu2022pooling}; SEC~\cite{huang2024sec}, algorithm, leaf]
+      ]
+      [Constrained, algorithm
+        [SuperTAD~\cite{zhang2021supertad}; deDoc2~\cite{li2023dedoc2}; SuperTAD2~\cite{ling2024supertad2};\\ SSE~\cite{zeng2024semiSSE}; SSSE~\cite{zeng2024scalableSSSE}; CoDeSEG~\cite{xian2025communitySEGame}, algorithm, leaf]
+      ]
+      [Gradient /\\Neural, algorithm
+        [LSENet~\cite{sun2024lsenet,sunli2024lsente}; DeSE~\cite{zhang2025dese}; HypCSE~\cite{zeng2026hypcse};\\ IsoSEL~\cite{isosel2025}; Glass-SE benchmarked in this survey, algorithm, leaf]
+      ]
+      [Classical\\Baselines, algorithm
+        [Modularity/Louvain~\cite{newman2004findingmodularity}; Leiden~\cite{traag2019leiden}; Infomap~\cite{rosvall2008maps};\\ normalized cuts~\cite{shi2000normalized}; spectral clustering~\cite{ng2002spectral};\\ random-walk communities~\cite{pons2005randomwalkCommunity,pons2006computing}; PageRank~\cite{page1999pagerank}, algorithm, leaf]
+      ]
+    ]
+  ]
+  [Learning\\Methods, learning
+    [Graph\\Learning, learning
+      [Graph\\Pooling, learning
+        [SEP~\cite{wu2022pooling}; Hi-PART~\cite{wxb2024hi-part};\\ DiffPool~\cite{ying2018diffpool}; MinCutPool~\cite{bianchi2020mincutpool}; DMoN~\cite{tsitsulin2020dmon}, learning, leaf]
+      ]
+      [Structure\\Augmentation, learning
+        [SEGA~\cite{wu2023sega}; USER~\cite{wang2023user};\\ SE-GSL~\cite{zou2023segsl}; SeGSL~\cite{duan2024structuralGSL};\\ contrastive NC~\cite{se_contrastive_nc2024}, learning, leaf]
+      ]
+      [Kernels \&\\Dimensions, learning
+        [HAGK~\cite{yang2024graphkernal}; MGEDE~\cite{yang2023MGEDE}; graph--LLM survey~\cite{li2023graphMeetsLLM}, learning, leaf]
+      ]
+      [Structure /\\Prediction, learning
+        [EDEN~\cite{li2025eden}; SEHFS~\cite{sehfs2025}; SE-meta~\cite{chen2026semeta};\\ SEGO~\cite{hou2025sego}; SIT-HSS~\cite{liu2025sihtc}; sample selection~\cite{xie2025ses}, learning, leaf]
+      ]
+    ]
+    [Reinforcement\\Learning, learning
+      [SIRD~\cite{zeng2023effective}; SISA~\cite{zeng2023hierarchicalSISA}; SI2E~\cite{zeng2024effectiveSI2E};\\ SIDM~\cite{zeng2025sidmJMLR}; SIHD~\cite{zeng2025sihd};\\ HSIN-MARL~\cite{se_marl_hierarchical2025}; COLLAB-MARL~\cite{su2025emergencecollab}, learning, leaf]
+    ]
+  ]
+  [Cross-Domain\\Applications, application
+    [Bioinformatics, application
+      [Cancer subtyping~\cite{li2016cancer}; deDoc~\cite{li2018dedoc}; deTOKI~\cite{li2021detoki}; SuperTAD~\cite{zhang2021supertad};\\ SEAT~\cite{chen2022pyseat}; deDoc2~\cite{li2023dedoc2}; SuperTAD-Fast~\cite{ling2024supertad2}, application, leaf]
+    ]
+    [Transport \&\\Knowledge, application
+      [MultiSPANS~\cite{zou2024multispans,zou2024transformer}; Scientific X-ray~\cite{wxb2022scientificxray};\\ KQI~\cite{wang2023quantifyingKnowledge}, application, leaf]
+    ]
+    [Social\\Networks, application
+      [UnDBot~\cite{peng2024zjyun}; SIASM~\cite{zeng2024socialbots}; SEBot~\cite{yang2024sebot}; SI2AF~\cite{zeng2025si2af};\\ HISEvent~\cite{cao2024socialevent}; ADP-SEMEvent~\cite{yang2024eventdetect}; HyperSED~\cite{yu2024hyperSED};\\ SeInEvent~\cite{yang2026seinevent}; RagSEDE~\cite{liu2026ragsede}, application, leaf]
+    ]
+    [Robustness \&\\Trustworthy AI, application
+      [REM community deception~\cite{liu2019rem}; fair clustering baseline~\cite{song2022mutualBNCV};\\ FairGSE~\cite{ye2026fairgse}; SeSE~\cite{zhao2025sese}; Lancet~\cite{lancet2025};\\ DeepSeek-R1~\cite{guo2025deepseek}; OpenAI o3-mini~\cite{openai_o3_mini}, application, leaf]
+    ]
+    [Pattern\\Recognition, application
+      [SLED~\cite{zeng2023lesion}; SIT-HSS~\cite{xie2025superpixel}; anomaly detection~\cite{zou2024hierrecGAD};\\ relation extraction~\cite{se_relation_extraction2025}; DiaASQE~\cite{se_dialogue_sentiment2025};\\ hypergraph recommendation~\cite{se_hypergraph_rec2025}; ST forecasting~\cite{se_timeseries2025};\\ infrared enhancement~\cite{se_infrared2025}; MASGCN~\cite{huang2025MASGCN};\\ HiTIN~\cite{zhu2023HiTIN}; SECodec~\cite{wang2024secodecSpeech}; SEVC~\cite{wang2025voice}, application, leaf]
+    ]
+  ]
+]
+\end{forest}%
+}
+\caption{Taxonomy of Structural Entropy research for the TGINA journal version
+(2016--2026), following the vertical visual organization of the IJCAI
+conference taxonomy~\cite{su2025ijcai} while adding journal-version categories
+and citations.}
 \label{fig:taxonomy}
 \end{figure}
-

@@ -3,7 +3,7 @@
 %% Transactions on Graph Intelligence and Network Applications (TGINA)
 %% Scilight Press  --  https://www.sciltp.com/journals/tgina
 %%
-%% Extended from the IJCAI-2025 survey (camera-ready June 18 2026):
+%% Extended from the IJCAI-2025 survey (camera-ready June 18 2025):
 %%   "A Survey of Structural Entropy: Theory, Methods, and Applications"
 %%   Dingli Su, Hao Peng, Yicheng Pan*, Angsheng Li  (Beihang University)
 %% NOTE: When the TGINA LaTeX template becomes publicly available, replace
@@ -18,6 +18,7 @@
 %% ---- Core packages ----
 \usepackage{amsmath,amssymb,amsthm,amsfonts}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{multirow}
 \usepackage{graphicx}
 \usepackage{xcolor}
@@ -46,7 +47,8 @@
 %% ---- Journal metadata ----
 \title{%
   Structural Entropy: A Decade Survey of Theory, Algorithms,\\
-  Learning Paradigms, and Applications
+  Learning Paradigms, and Applications\\
+  \large TGINA Journal Manuscript
 }
 
 \author{%
@@ -74,10 +76,12 @@
 
 \input{sections/abstract}
 \input{sections/introduction}
+\input{sections/related_work}
 \input{sections/taxonomy}
 \input{sections/algorithms}
 \input{sections/learning}
 \input{sections/benchmark}
+\input{sections/discussion}
 \input{sections/open_problems}
 \input{sections/conclusion}
 
@@ -98,4 +102,3 @@ Software Environment (CCSE-2024ZX-20).
 \input{sections/appendix}
 
 \end{document}
-

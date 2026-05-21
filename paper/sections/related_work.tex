@@ -1,0 +1,54 @@
+\section{Related Work}
+\label{sec:related}
+
+Structural Entropy is part of a broader family of graph-complexity and graph
+clustering methods, but it differs from most classical objectives in treating
+hierarchical organization as the primary object to be decoded.
+We summarize the closest methodological neighbors below and use them as
+reference points for the taxonomy and benchmark sections.
+
+\paragraph{Modularity-based community detection.}
+Modularity compares observed within-community edge density against a
+configuration-model null graph~\cite{newman2004findingmodularity}.
+Louvain and Leiden-style optimization methods make this objective highly
+scalable, with Leiden additionally improving partition connectivity and
+refinement stability~\cite{traag2019leiden}.
+These methods are strong default baselines for topology-driven clustering,
+but their flat partitions and known resolution effects make them less suited
+to explicitly nested abstractions.
+SE instead evaluates the coding cost induced by an encoding tree, so the
+partition is interpreted as an information hierarchy rather than only a
+density surplus.
+
+\paragraph{Flow-based compression.}
+The map equation and Infomap encode random-walk trajectories using module
+codebooks~\cite{rosvall2008maps}.
+They are conceptually close to SE because both explain graph organization
+through compression, but the objects being compressed are different:
+Infomap compresses flows, while SE compresses structural uncertainty under
+volumes, cuts, and tree refinement.
+This distinction matters in applications where the observed graph represents
+an information system rather than an explicit navigation process.
+
+\paragraph{Spectral partitioning.}
+Spectral clustering and normalized cuts use eigenvectors of graph Laplacians
+to expose low-conductance partitions~\cite{shi2000normalized,ng2002spectral}.
+These methods provide strong relaxations for balanced graph cuts and remain
+important for initialization and diagnostics.
+However, spectral objectives are usually flat and externally parameterized by
+the desired number of clusters.
+SE can use spectral information, as in the VNE connection, but its target is a
+minimum-description hierarchy rather than an eigenspace partition alone.
+
+\paragraph{Deep graph clustering and pooling.}
+Neural graph clustering methods such as DiffPool, MinCutPool, and DMoN learn
+soft assignments inside GNN architectures~\cite{ying2018diffpool,bianchi2020mincutpool,tsitsulin2020dmon}.
+They are effective when node attributes and task labels provide additional
+semantic signal, but their objectives are often architectural regularizers
+rather than standalone measures of structural organization.
+Recent SE-based neural methods, including LSENet and DeSE, bridge this gap by
+making structural entropy differentiable~\cite{sun2024lsenet,zhang2025dese}.
+The journal contribution of this survey is to place these neural methods in
+the same conceptual map as the original combinatorial SE algorithms and their
+domain-specific extensions.
+

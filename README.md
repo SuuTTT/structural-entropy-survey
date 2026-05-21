@@ -46,7 +46,8 @@ git add papers/papers.csv paper/refs.bib papers/awesome-structural-entropy.md
 For preprint→published: use the published year+venue key; put arXiv ID in the `arxiv_id` column.
 
 **Current status (auto from `sync.py`):**
-- `papers.csv` : 88 entries · 76 in refs.bib · 12 pending · 7 benchmarked
+- `papers.csv` : 104 entries · 82 marked `in_bib=yes` · 22 pending · 7 benchmarked
+- `refs.bib` : 82 entries · 0 uncatalogued keys
 - Known duplicates: `sunli2024lsente` = `sun2024lsenet`; `zou2024multispans` = `zou2024transformer`
 
 ## Compile Paper
@@ -55,4 +56,3 @@ For preprint→published: use the published year+venue key; put arXiv ID in the 
 cd paper
 pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
 ```
-

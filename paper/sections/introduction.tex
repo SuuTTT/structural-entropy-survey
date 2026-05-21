@@ -42,6 +42,19 @@ Its significance for the AI community is twofold:
         hierarchy~\cite{zeng2025sidmJMLR}.
 \end{itemize}
 
+In the context of \emph{Transactions on Graph Intelligence and Network
+Applications} (TGINA), SE is timely because modern graph intelligence systems
+increasingly need more than accurate predictions: they need interpretable,
+auditable, and reusable structural abstractions.
+This is especially visible in graph-enhanced large language model pipelines,
+including GraphRAG-style retrieval, knowledge-graph reasoning, tool-use
+memory, and autonomous-agent interaction graphs.
+These systems generate relational structures whose trustworthiness depends on
+whether meaningful hierarchies can be separated from incidental links.
+SE provides a principled way to measure such organization and, through
+minimization, to construct candidate hierarchies for retrieval, reasoning, and
+decision making.
+
 \subsection*{Motivation: Why a Decade Survey Now?}
 
 The foundational SE paper~\cite{Li2016} was published a decade ago.
@@ -91,6 +104,8 @@ survey~\cite{su2025ijcai} published at IJCAI 2025:
 \subsection*{Paper Organization}
 
 The remainder of this survey is organized as follows.
+Section~\ref{sec:related} positions SE against modularity, flow-based,
+spectral, and deep graph-clustering methods.
 Section~\ref{sec:taxonomy} introduces a taxonomy of SE research and its
 formal definitions.
 Section~\ref{sec:theory} covers theoretical foundations.
@@ -102,4 +117,3 @@ Section~\ref{sec:applications} reviews cross-domain applications.
 Section~\ref{sec:benchmark} presents the reproducibility benchmark.
 Section~\ref{sec:open} discusses open problems and future directions.
 Section~\ref{sec:conclusion} concludes.
-
