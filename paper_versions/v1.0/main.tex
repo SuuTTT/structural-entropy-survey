@@ -1,0 +1,105 @@
+%%
+%% Journal Version for:
+%% Transactions on Graph Intelligence and Network Applications (TGINA)
+%% Scilight Press  --  https://www.sciltp.com/journals/tgina
+%%
+%% Extended from the IJCAI-2025 survey (camera-ready June 18 2025):
+%%   "A Survey of Structural Entropy: Theory, Methods, and Applications"
+%%   Dingli Su, Hao Peng, Yicheng Pan*, Angsheng Li  (Beihang University)
+%% NOTE: When the TGINA LaTeX template becomes publicly available, replace
+%%       this document class / geometry with the official template.
+%%
+
+\documentclass[12pt,a4paper]{article}
+
+%% ---- Page layout ----
+\usepackage[a4paper,top=25mm,bottom=25mm,left=25mm,right=25mm]{geometry}
+
+%% ---- Core packages ----
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[hidelinks,colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{tikz}
+\usepackage[edges]{forest}
+\usepackage{marvosym}
+
+%% ---- Theorem environments ----
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{example}{Example}[section]
+
+%% ---- Journal metadata ----
+\title{%
+  Structural Entropy: A Decade Survey of Theory, Algorithms,\\
+  Learning Paradigms, and Applications\\
+  \large TGINA Journal Manuscript (V1.0)
+}
+
+\author{%
+  Dingli Su$^{1}$\thanks{Equal contribution.}
+  \and
+  Hao Peng$^{1}$
+  \and
+  Yicheng Pan$^{1,}$\thanks{Corresponding author: \texttt{yichengp@buaa.edu.cn}}
+  \and
+  Angsheng Li$^{1}$
+}
+\date{%
+  $^1$Beihang University, Beijing, China\\[4pt]
+  \small
+  \emph{This article is an expanded version of the conference paper
+  ``A Survey of Structural Entropy: Theory, Methods, and Applications''
+  published at the 34th International Joint Conference on
+  Artificial Intelligence (IJCAI 2025).}\\[4pt]
+  \small Draft line: \textbf{V1.0 writing-model rewrite for comparison with V0.0}
+}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{plain}
+
+\input{sections/abstract}
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/taxonomy}
+\input{sections/algorithms}
+\input{sections/learning}
+\input{sections/benchmark}
+\input{sections/discussion}
+\input{sections/open_problems}
+\input{sections/conclusion}
+
+\section*{Acknowledgments}
+This work has been supported in part by NSFC through grants 62322202, 62441612
+and 62432006, Local Science and Technology Development Fund of Hebei Province
+Guided by the Central Government of China through grant 246Z0102G, the
+``Pioneer'' and ``Leading Goose'' R\&D Program of Zhejiang through grant
+2025C02044, National Key Laboratory under grant 241-HF-D07-01, Hebei Natural
+Science Foundation through grant F2024210008, National Key R\&D Program of China
+through grant 2021YFB3500700, and State Key Laboratory of Complex \& Critical
+Software Environment (CCSE-2024ZX-20).
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\appendix
+\input{sections/appendix}
+
+\end{document}

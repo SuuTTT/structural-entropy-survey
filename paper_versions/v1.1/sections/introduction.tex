@@ -1,0 +1,106 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Information is a basic organizing principle of artificial intelligence.
+Learning systems compress observations into representations, decision systems
+reduce uncertainty about actions, and graph-based systems try to expose
+structure that is not immediately visible from local relations alone.
+Much of classical information theory, however, is local in flavour: it
+quantifies uncertainty in symbols, variables, or pairwise dependencies.
+\textbf{Structural Entropy (SE)}~\cite{Li2016} asks a different question.
+Instead of only measuring uncertainty at the level of isolated variables, it
+studies the uncertainty embedded in the organization of a whole system.
+
+This perspective is especially natural for graphs.
+Real graph data are rarely just collections of edges.
+Social networks contain groups and subgroups, biological systems organize into
+functional modules, and modern AI pipelines increasingly generate interaction
+graphs whose usefulness depends on whether they admit meaningful hierarchies.
+In such settings, one often wants more than a flat partition or a predictive
+score.
+One wants a structural description of the system: which components belong
+together, at what scale, and according to what coding principle.
+
+SE provides one answer to this problem.
+In its original form, it connects graph organization to coding trees and
+interprets good hierarchical partitions as efficient information-theoretic
+descriptions of the graph~\cite{Li2016}.
+It is both a measure of residual structural uncertainty and an optimization
+principle for discovering efficient hierarchical decompositions.
+That combination has made SE useful not only for community detection, where it
+first gained attention, but also for graph pooling, augmentation, clustering,
+control, and domain-specific discovery tasks~\cite{wu2022pooling,wu2023sega,zeng2025sidmJMLR,zhang2021supertad,peng2024zjyun,zhu2023HiTIN}.
+
+This perspective is timely for graph intelligence because contemporary systems
+increasingly need more than accurate predictions.
+They need structural abstractions that are interpretable, reusable, and stable
+enough to support retrieval, reasoning, and decision making.
+The need is especially visible in graph-enhanced large language model
+pipelines, knowledge-graph reasoning systems, tool-use memory, and
+autonomous-agent interaction graphs.
+These systems create relational structures whose usefulness depends on whether
+meaningful hierarchies can be separated from incidental links.
+
+The field has grown quickly since the foundational work of Li and Pan in 2016.
+What began as a graph-theoretic and coding-theoretic framework for uncovering
+community structure now includes variants for directed graphs, dynamic
+settings, differentiable deep models, and decision-making
+systems~\cite{Li2016,pan2021information,sun2024lsenet,zeng2025sidmJMLR}.
+SE-based ideas have appeared in graph neural networks, reinforcement learning,
+social-bot analysis, genomic data analysis, traffic modelling, and speech or
+vision applications~\cite{yang2024sebot,chen2022pyseat,zou2024transformer,wang2024secodecSpeech}.
+At the same time, the literature has become fragmented.
+Different papers use SE as a discrete objective, a regularizer, a hierarchy
+prior, a robustness signal, or a task-specific structural score.
+As a result, readers can now find many applications of the idea, but it is
+harder to see the shape of the field as a whole.
+
+This survey reviews the first decade of SE research and organizes it around a
+small number of recurring questions.
+What exactly does SE measure, and how does it differ from related graph
+objectives such as modularity, the map equation, spectral criteria, or other
+entropy-based quantities?
+What algorithmic families have been developed to minimize or approximate it?
+How has the idea been adapted to differentiable graph learning and
+reinforcement learning?
+Which application areas have produced the most convincing evidence of value,
+and how should those claims be evaluated?
+By bringing these threads together, we aim to provide both a map of the
+literature and a clearer understanding of what SE contributes as an
+information-theoretic view of graph intelligence.
+
+Our perspective in this journal version is shaped by two developments.
+First, SE research is now large enough to support a genuine survey rather than
+a short position piece.
+Second, graph intelligence has changed substantially in the same period.
+Contemporary systems increasingly combine graph structure with foundation
+models, retrieval pipelines, agent memories, and multimodal interaction logs.
+These systems create new opportunities for structural abstraction, but they
+also raise harder questions about interpretability, stability, and
+evaluation.
+SE is timely in this setting because it offers a language for reasoning about
+organization itself, not only prediction.
+
+The present manuscript substantially extends our earlier conference
+survey~\cite{su2025ijcai}.
+Relative to that version, the journal manuscript expands the theoretical
+background, broadens the algorithm catalogue, updates the application review
+through 2026, adds a reproducibility benchmark with the \texttt{glass-jax}
+companion library, and develops a fuller discussion of open problems.
+The aim is not only to collect papers, but to organize a field that now spans
+classical graph theory, modern graph learning, and emerging graph-enhanced AI
+systems.
+
+The remainder of the survey follows that logic.
+Section~\ref{sec:related} positions SE relative to neighboring graph
+objectives and learning paradigms.
+Section~\ref{sec:taxonomy} introduces the survey taxonomy and formal framing.
+Section~\ref{sec:algorithms} reviews major optimization approaches for SE
+minimization.
+Section~\ref{sec:learning} discusses learning-based formulations, including
+graph-learning and reinforcement-learning variants.
+Section~\ref{sec:benchmark} examines evaluation practice through our benchmark
+and reproducibility lens.
+Section~\ref{sec:discussion} and Section~\ref{sec:open} widen the view to
+implications, limitations, and future directions, and
+Section~\ref{sec:conclusion} concludes.

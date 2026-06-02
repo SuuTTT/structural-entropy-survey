@@ -1,0 +1,31 @@
+\begin{abstract}
+Graphs have become a common language for artificial intelligence, from social
+and biological interaction networks to knowledge graphs, retrieval pipelines,
+and autonomous-agent workflows.
+A central challenge in these systems is to identify meaningful organization
+across scales rather than only local interactions.
+\emph{Structural Entropy} (SE) addresses this challenge by extending
+information-theoretic reasoning from pairwise uncertainty to hierarchical
+structure: it measures how efficiently a graph can be encoded by a multilevel
+partition and, through minimization, reveals candidate structural abstractions
+of the system.
+
+Over the past decade, SE has developed from a community-detection principle
+into a broader framework spanning graph clustering, graph pooling, graph
+structure learning, reinforcement learning, bioinformatics, social-network
+analysis, and pattern recognition~\cite{Li2016,wu2022pooling,zeng2025sidmJMLR,zhang2021supertad,peng2024zjyun,zhu2023HiTIN}.
+In this survey we review that development.
+We summarize the mathematical foundations of SE, organize the literature into
+major methodological families, compare SE with neighboring graph objectives
+such as modularity and flow-based compression, and examine how the field is
+evaluated in practice.
+We also discuss open problems in scalability, differentiable optimization,
+heterogeneous structures, and integration with modern graph-enhanced AI
+systems.
+A companion open-source library, \texttt{glass-jax}, accompanies this survey
+as a reproducibility artifact.
+
+\medskip\noindent\textbf{Keywords:} structural entropy, graph clustering,
+hierarchical community detection, graph neural networks, reinforcement learning,
+information theory.
+\end{abstract}
